@@ -9,5 +9,6 @@ set(HEADERS ${INCLUDE_PATH}/convolution.hpp
             ${INCLUDE_PATH}/scheduler.hpp
             )
 
+enable_testing()
 add_subdirectory("src")
 add_subdirectory("tests")
