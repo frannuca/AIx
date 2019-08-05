@@ -1,2 +1,0 @@
-/usr/bin/ar qc libCNN.a  CMakeFiles/CNN.dir/convolution.cpp.o CMakeFiles/CNN.dir/custom_exceptions.cpp.o
-/usr/bin/ranlib libCNN.a
