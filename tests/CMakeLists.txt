@@ -16,7 +16,7 @@ set(CTEST_BINARY_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 
 
 #file(GLOB files "test_*.cc")
-set(TEST_FILES test_queue.cpp)
+set(TEST_FILES test_queue.cpp test_convolute.cpp)
 
 foreach(file ${TEST_FILES})
 	string(REGEX REPLACE "(^.*/|\\.[^.]*$)" "" file_without_ext ${file})
