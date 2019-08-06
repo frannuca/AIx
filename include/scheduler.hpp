@@ -73,7 +73,11 @@ namespace cnn{
         }
 
         template<typename T>
-        std::future<T> Scheduler<T>::push(Action f){                       
+        std::future<T> Scheduler<T>::push(Action f){  
+            if(!_isRunning){
+                start();
+            }       
+                          
             EntryData data(new std::packaged_task<decltype(f())()>(f));
             _queue.push(data);
             return data->get_future();            

@@ -9,7 +9,7 @@ find_package (Threads REQUIRED)
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(SOURCES convolution.cpp  custom_exceptions.cpp ${HEADERS})
+set(SOURCES convolution.cpp  custom_exceptions.cpp  cnn.cpp pooling.cpp ${HEADERS})
 add_library(CNN ${SOURCES})
 target_link_libraries(CNN ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 target_include_directories(CNN PUBLIC ${PROJECT_SOURCE_DIR}/include/)

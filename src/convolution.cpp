@@ -31,30 +31,30 @@ namespace cnn
 
         arma::mat rc(Ny,Nx);                
 
-        auto assignvalue = [&rc,&b](int ni, int nj, decltype(a.submat(0,0,1,1)) tsub) {   
-            //std::this_thread::sleep_for(std::chrono::milliseconds(1000));           
+        auto assignvalue = [&rc,&b](int ni, int nj, decltype(a.submat(0,0,1,1)) tsub) {           
             rc(ni,nj) = arma::accu(tsub % b);
-            //std::cout<<"rc("<<ni<<","<<nj<<")="<<rc(ni,nj)<<std::endl;
-            //std::cout<<"slice"<<std::endl<<tsub<<std::endl;
-            //std::cout<<"filter"<<std::endl<<b<<std::endl;
-            //std::cout<<"-----------------------------"<<std::endl;
             };
 
-        pScheduler->stop();
-        std::vector<std::future<void>> v;
-        for(int i=0;i<Ny;i++){                        
-            for(int j=0;j<Nx;j++){
-                auto tsub = a.submat(i*stridey,j*stridex,i*stridey+Rb-1,j*stridex+Cb-1);  
-                //std::cout<<"("<<i*stridey<<","<<j*stridex<<","<<  i*stridey+Rb-1 <<","<<  j*stridex+Cb-1<<")"<<std::endl;         
-                //std::cout<<"i="<<i*stridey<<" j="<<j*stridex<<std::endl;
-                //std::cout<<"slice"<<std::endl<<tsub<<std::endl;
-                int ix = i;
-                int jx = j;
-                v.push_back(std::move(pScheduler->push([ix,jx,&assignvalue,tsub](){assignvalue(ix,jx,tsub);})));
-            }
+        if(pScheduler){
+            std::vector<std::future<void>> v;
+            for(int i=0;i<Ny;i++){                        
+                for(int j=0;j<Nx;j++){
+                    auto tsub = a.submat(i*stridey,j*stridex,i*stridey+Rb-1,j*stridex+Cb-1);  
+                    int ix = i;
+                    int jx = j;
+                    v.push_back(std::move(pScheduler->push([ix,jx,&assignvalue,tsub](){assignvalue(ix,jx,tsub);})));
+                }
+            }        
+            for(auto& f: v) f.get();
         }
-        pScheduler->start();
-        for(auto& f: v) f.get();
+        else{
+            for(int i=0;i<Ny;i++){                        
+                for(int j=0;j<Nx;j++){
+                    auto tsub = a.submat(i*stridey,j*stridex,i*stridey+Rb-1,j*stridex+Cb-1);                  
+                    assignvalue(i,j,tsub);
+                }
+            }       
+        }
         return rc;
     };
     }

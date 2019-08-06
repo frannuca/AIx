@@ -7,6 +7,8 @@ set(HEADERS ${INCLUDE_PATH}/convolution.hpp
             ${INCLUDE_PATH}/threadsafequeue.hpp
             ${INCLUDE_PATH}/custom_exceptions.hpp
             ${INCLUDE_PATH}/scheduler.hpp
+            ${INCLUDE_PATH}/cnn.hpp
+            ${INCLUDE_PATH}/pooling.hpp
             )
 
 enable_testing()
