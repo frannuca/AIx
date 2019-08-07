@@ -8,6 +8,20 @@ enable_testing()
 
 find_package(Armadillo  REQUIRED)
 find_package (Threads)
+find_package( OpenCV REQUIRED )
+
+set(Boost_USE_STATIC_LIBS        OFF)  # only find static libs
+set(Boost_USE_DEBUG_LIBS         OFF) # ignore debug libs and
+set(Boost_USE_RELEASE_LIBS       ON)  # only find release libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+find_package(Boost COMPONENTS date_time filesystem system 
+)
+if(!Boost_FOUND)
+	message( FATAL_ERROR  "BOOST LIBS not found!!")
+endif()
+
+include_directories(${Boost_INCLUDE_DIRS})   
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
@@ -16,12 +30,13 @@ set(CTEST_BINARY_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 
 
 #file(GLOB files "test_*.cc")
-set(TEST_FILES test_queue.cpp test_convolute.cpp) 
+set(TEST_FILES test_queue.cpp test_convolute.cpp test_opencv.cpp) 
 
 foreach(file ${TEST_FILES})
 	string(REGEX REPLACE "(^.*/|\\.[^.]*$)" "" file_without_ext ${file})
 	add_executable(${file_without_ext} ${file} ${HEADERS})
-	target_link_libraries(${file_without_ext} CNN ${PROJECT_LIBS} ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})	
+	target_link_libraries(${file_without_ext} CNN ${PROJECT_LIBS} ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}  ${Boost_LIBRARIES} ${OpenCV_LIBS})	
+	
 	target_include_directories(${file_without_ext} PUBLIC ${INCLUDE_PATH})
 	add_test(${file_without_ext} ${file_without_ext})
 	set_tests_properties(${file_without_ext}

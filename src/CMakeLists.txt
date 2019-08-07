@@ -6,12 +6,27 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Armadillo  REQUIRED)
 find_package (Threads REQUIRED)
+find_package( OpenCV REQUIRED )
+
+set(Boost_USE_STATIC_LIBS        OFF)  # only find static libs
+set(Boost_USE_DEBUG_LIBS         OFF) # ignore debug libs and
+set(Boost_USE_RELEASE_LIBS       ON)  # only find release libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+find_package(Boost COMPONENTS date_time filesystem system 
+)
+if(!Boost_FOUND)
+	message( FATAL_ERROR  "BOOST LIBS not found!!")
+endif()
+
+include_directories(${Boost_INCLUDE_DIRS})   
+
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(SOURCES convolution.cpp  custom_exceptions.cpp  cnn.cpp pooling.cpp ${HEADERS})
+set(SOURCES convolution.cpp  custom_exceptions.cpp  cnn.cpp pooling.cpp activations.cpp preprocessing.cpp ${HEADERS})
 add_library(CNN ${SOURCES})
-target_link_libraries(CNN ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(CNN ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 target_include_directories(CNN PUBLIC ${PROJECT_SOURCE_DIR}/include/)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})

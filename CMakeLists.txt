@@ -9,6 +9,8 @@ set(HEADERS ${INCLUDE_PATH}/convolution.hpp
             ${INCLUDE_PATH}/scheduler.hpp
             ${INCLUDE_PATH}/cnn.hpp
             ${INCLUDE_PATH}/pooling.hpp
+            ${INCLUDE_PATH}/activations.hpp
+            ${INCLUDE_PATH}/preprocessing.hpp
             )
 
 enable_testing()

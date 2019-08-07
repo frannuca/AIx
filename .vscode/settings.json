@@ -1,5 +1,4 @@
 {
-    "C_Cpp.default.configurationProvider": "go2sh.cmake-integration",
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",
@@ -50,6 +49,10 @@
         "utility": "cpp",
         "cstdarg": "cpp",
         "cinttypes": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "bitset": "cpp",
+        "list": "cpp",
+        "iomanip": "cpp",
+        "map": "cpp"
     }
 }
