@@ -32,5 +32,6 @@
 *.app
 # directories
 /build/
+/.vscode/
 .vscode/launch.json
 .vscode/tasks.json
