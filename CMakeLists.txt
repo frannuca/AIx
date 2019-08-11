@@ -11,6 +11,11 @@ set(HEADERS ${INCLUDE_PATH}/convolution.hpp
             ${INCLUDE_PATH}/pooling.hpp
             ${INCLUDE_PATH}/activations.hpp
             ${INCLUDE_PATH}/preprocessing.hpp
+            ${INCLUDE_PATH}/softmax.hpp
+            ${INCLUDE_PATH}/layer.hpp
+            ${INCLUDE_PATH}/crossentropylayer.hpp
+            ${INCLUDE_PATH}/cell.hpp
+            ${INCLUDE_PATH}/ffnn.hpp
             )
 
 enable_testing()

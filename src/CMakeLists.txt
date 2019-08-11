@@ -24,7 +24,18 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(SOURCES convolution.cpp  custom_exceptions.cpp  cnn.cpp pooling.cpp activations.cpp preprocessing.cpp ${HEADERS})
+set(SOURCES convolution.cpp  
+			custom_exceptions.cpp  
+			cnn.cpp 
+			pooling.cpp 
+			activations.cpp 
+			preprocessing.cpp 
+			softmax.cpp
+			crossentropylayer.cpp
+			layer.cpp
+			cell.cpp
+			ffnn.cpp
+			${HEADERS})
 add_library(CNN ${SOURCES})
 target_link_libraries(CNN ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 target_include_directories(CNN PUBLIC ${PROJECT_SOURCE_DIR}/include/)
