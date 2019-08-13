@@ -5,7 +5,7 @@ namespace cnn{
 
     void Cell::compute(const double& x){
         _fx.reset(_f(x));
-        _dfx.reset(_df(x));
+        _dfx.reset(_df(x));        
 
     }
 

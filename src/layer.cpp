@@ -12,9 +12,14 @@ namespace cnn{
     }
 
     arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W){
+        auto a1 = W.submat(0,0,arma::SizeMat(W.n_rows,x.size())) * x;
+        auto b1 = W.col(x.size());
         auto s = arma::conv_to<std::vector<double>>::from( 
-                            arma::conv_to<arma::colvec>::from(W.submat(0,0,arma::SizeMat(W.n_rows,x.size())) * x) + W.col(x.size()+1)
+                            arma::conv_to<arma::colvec>::from(a1) + b1
                             );
+        // std::cout<<"xin"<<x.t()<<std::endl;
+        // std::cout<<"W*x+b"<<(a1+b1).t()<<std::endl;        
+
         int i=0;
         std::vector<double> gf,f;
         for(auto cell:_cells){
@@ -29,7 +34,7 @@ namespace cnn{
         doutputs = arma::vec(gf);
         f.push_back(1.0);
         outputs_1 = arma::vec(f);
-
+        
         return outputs.get();
     }
 

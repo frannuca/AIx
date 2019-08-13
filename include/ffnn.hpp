@@ -27,8 +27,10 @@ namespace cnn{
             FFNN& withOutputLayer(std::unique_ptr<Layer>);
             FFNN& withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> loss,std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss);
             void Build();
-            void forward(const arma::vec& xin, const arma::vec& y);
+            double forward(const arma::vec& xin, const arma::vec& y);
             void backward();
+
+            arma::vec operator()(const arma::vec& x);
     };
 }
 #endif

@@ -7,7 +7,7 @@ using namespace cv;
 
 int main(int argc, char** argv )
 {
-    auto imagepath = "/mnt/c/Users/venus/code/cpp/github/cnn/resources/lena_color.jpg";   
+    auto imagepath = "~/code/cpp/github/cnn/resources/lena_color.jpg";   
 
     Mat image;
     image = imread(imagepath, cv::IMREAD_COLOR );    
