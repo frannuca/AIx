@@ -4,34 +4,41 @@
 #include <memory>
 #include <functional>
 #include <armadillo>
+#include "inetwork.hpp"
 
 namespace cnn{
-    class FFNN{
-        private:
+ class FFNNBuilder;
+ class FFNN: public INetwork{
+        public:
             std::vector<std::unique_ptr<Layer>> _layers;
             std::unique_ptr<Layer> _outputLayer;
             std::function<double(const arma::vec&,const arma::vec&)> _floss;
             std::function<arma::vec(const arma::vec&,const arma::vec&)> _dfloss;
-            std::vector<arma::mat> _Ws;
+            mutable std::vector<arma::mat> _Ws;
             size_t _number_inputs;
-            boost::optional<double> _loss;
-            boost::optional<arma::vec> _dloss;
-            boost::optional<arma::vec> _input;
-            boost::optional<arma::vec> _input_1;
-            boost::optional<arma::vec> _output;
+            mutable boost::optional<double> _loss;
+            mutable boost::optional<arma::vec> _dloss;
+            mutable boost::optional<arma::vec> _input;
+            mutable boost::optional<arma::vec> _input_1;
+            mutable boost::optional<arma::vec> _output;
             double lr;
-
+            virtual void init(){};
+            //friend class FFNNBuider;
         public:
             FFNN();
-            FFNN& withInputLayer(size_t number_of_inputs);
-            FFNN& withHiddenLayer(std::unique_ptr<Layer>);
-            FFNN& withOutputLayer(std::unique_ptr<Layer>);
-            FFNN& withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> loss,std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss);
-            void Build();
-            double forward(const arma::vec& xin, const arma::vec& y);
-            void backward();
+            void withInputLayer(size_t number_of_inputs);
+            void withHiddenLayer(std::unique_ptr<Layer>);
+            void withOutputLayer(std::unique_ptr<Layer>);
+            void withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> loss,std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss);
+            
+            double forward(const arma::vec& xin, const arma::vec& y) const;
+            virtual void backward() const =0 ;
 
-            arma::vec operator()(const arma::vec& x);
+            arma::vec operator()(const arma::vec& x) const override;
+            virtual void train(const TrainingSet& trainingset, size_t niter) const override; 
+            virtual ~FFNN();
     };
+
+
 }
 #endif

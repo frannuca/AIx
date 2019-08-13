@@ -1,11 +1,13 @@
 #include "cell.hpp"
 
 namespace cnn{
-    Cell::Cell(Cell::TActivation f, Cell::TActivation fgrad):_f(f),_df(fgrad){}
+    Cell::Cell(std::shared_ptr<IActivation> ptr_):ptr(ptr_){
+
+    }
 
     void Cell::compute(const double& x){
-        _fx.reset(_f(x));
-        _dfx.reset(_df(x));        
+        _fx.reset(ptr->f(x));
+        _dfx.reset(ptr->df(x));        
 
     }
 

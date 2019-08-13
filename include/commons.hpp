@@ -5,9 +5,14 @@
 #include <vector>
 #include <utility>
 namespace cnn{
-    typedef std::pair<arma::mat,arma::mat> TrainingSample;
+    
+    
+    struct TrainingSample{
+        arma::mat input;
+        arma::mat output;
+    };
+    
     typedef std::vector<TrainingSample> TrainingSet;
-
     const double epsilon = 1e-9;
 }
 

@@ -16,6 +16,10 @@ set(HEADERS ${INCLUDE_PATH}/convolution.hpp
             ${INCLUDE_PATH}/crossentropylayer.hpp
             ${INCLUDE_PATH}/cell.hpp
             ${INCLUDE_PATH}/ffnn.hpp
+            ${INCLUDE_PATH}/ffnn_newton.hpp    
+            ${INCLUDE_PATH}/ffnn_rsprop.hpp    
+            ${INCLUDE_PATH}/inetwork.hpp
+            ${INCLUDE_PATH}/ffnnbuilder.hpp            
             )
 
 enable_testing()

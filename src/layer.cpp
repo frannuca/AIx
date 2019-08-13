@@ -3,8 +3,8 @@
 
 namespace cnn{
 
-    Layer::Layer(size_t number_of_cells,Cell::TActivation f, Cell::TActivation df):Ncells(number_of_cells){
-        auto cellproto = Cell(f,df);
+    Layer::Layer(size_t number_of_cells,std::shared_ptr<IActivation> pact):Ncells(number_of_cells){
+        auto cellproto = Cell(pact);
         for(size_t i=0;i<number_of_cells;++i) _cells.push_back(cellproto);
     }
     size_t Layer::size(){

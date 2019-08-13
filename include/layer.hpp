@@ -2,8 +2,10 @@
 #define LAYER_H
 #include <functional>
 #include <armadillo>
+#include <memory>
 #include "commons.hpp"
 #include "cell.hpp"
+#include "activations.hpp"
 #include <boost/optional.hpp>
 
 namespace cnn{
@@ -18,7 +20,7 @@ namespace cnn{
 
         public:
             Layer() = delete;
-            Layer(size_t number_of_cells,Cell::TActivation f, Cell::TActivation df);
+            Layer(size_t number_of_cells,std::shared_ptr<IActivation> ptract);
 
             arma::vec forward(const arma::vec& x, const arma::mat& W);
             arma::vec derivatives();

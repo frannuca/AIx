@@ -35,6 +35,9 @@ set(SOURCES convolution.cpp
 			layer.cpp
 			cell.cpp
 			ffnn.cpp
+			ffnn_newton.cpp
+			ffnnbuilder.cpp	
+			ffnn_rsprop.cpp		
 			${HEADERS})
 add_library(CNN ${SOURCES})
 target_link_libraries(CNN ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
