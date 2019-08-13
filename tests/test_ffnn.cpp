@@ -11,10 +11,10 @@ int main(int argc, char** argv )
 {
     size_t number_of_cells = 2;
     double c = 2.0;
-    //Cell::TActivation f = [c](const double& x){return 1.0/(1.0+std::exp(-c*x));};
-    //Cell::TActivation df = [&f,c](const double& x){return c*f(x) * (1-f(x));};
-    Cell::TActivation f = [c](const double& x){if(x<0) return 0.001*x; else return x;};
-    Cell::TActivation df = [&f,c](const double& x){if(x<0) return 0.001; else return 1.0;};
+    Cell::TActivation f = [c](const double& x){return 1.0/(1.0+std::exp(-c*x));};
+    Cell::TActivation df = [&f,c](const double& x){return c*f(x) * (1-f(x));};
+    // Cell::TActivation f = [c](const double& x){if(x<0) return 0.001*x; else return x;};
+    // Cell::TActivation df = [&f,c](const double& x){if(x<0) return 0.001; else return 1.0;};
     auto floss = [](const arma::vec& x, const arma::vec& y){
                 auto d = arma::sum((x-y)*(x-y));
                 return d*0.5;
@@ -27,7 +27,7 @@ int main(int argc, char** argv )
     std::unique_ptr<Layer> h3(new Layer(number_of_cells,f,df));
     std::unique_ptr<Layer> h4(new Layer(number_of_cells,f,df));
     std::unique_ptr<Layer> o(new Layer(1,f,df));
-    net.withInputLayer(2).withHiddenLayer(std::move(h1)).withHiddenLayer(std::move(h2)).withHiddenLayer(std::move(h3)).withHiddenLayer(std::move(h4)).withOutputLayer(std::move(o)).withLossFunctions(floss,dfloss).Build();
+    net.withInputLayer(2).withHiddenLayer(std::move(h1)).withOutputLayer(std::move(o)).withLossFunctions(floss,dfloss).Build();
     
     //data set:
     arma::vec x0({0,0});
@@ -38,20 +38,20 @@ int main(int argc, char** argv )
     arma::vec y0({0});
     arma::vec y1({1});
     arma::vec y2({1});
-    arma::vec y3({1});
+    arma::vec y3({0});
     auto next = [&](){
         double err=0.0;
         err += net.forward(x0,y0);
         net.backward();
 
-        // err += net.forward(x1,y1);
-        // net.backward();
+        err += net.forward(x1,y1);
+        net.backward();
         
-        // err += net.forward(x2,y2);
-        // net.backward();
+        err += net.forward(x2,y2);
+        net.backward();
         
-        // err += net.forward(x3,y3);
-        // net.backward();
+        err += net.forward(x3,y3);
+        net.backward();
 
         std::cout<<"ERR="<<err<<std::endl;
         

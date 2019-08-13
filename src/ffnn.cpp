@@ -2,7 +2,7 @@
 
 namespace cnn{
     FFNN::FFNN(){
-        lr = 0.01;
+        lr = 0.1;
     }
     
     FFNN& FFNN::withInputLayer(size_t number_of_inputs){
@@ -26,13 +26,13 @@ namespace cnn{
         for(size_t i=0;i< _layers.size();++i){
             arma::mat w;
             if(i==0){
-                w= arma::randu(arma::SizeMat(_layers[i]->size(),_number_inputs+1))*0.1;
+                w= arma::randu(arma::SizeMat(_layers[i]->size(),_number_inputs+1))*std::sqrt(1.0/_number_inputs);
             }
             else{
-                w= arma::randu(arma::SizeMat(_layers[i]->size(),_layers[i-1]->size()+1))*0.1;
+                w= arma::randu(arma::SizeMat(_layers[i]->size(),_layers[i-1]->size()+1))*std::sqrt(1.0/_layers[i]->size());
             }
             //std::cout<<"W["<<i<<"]"<<w<<std::endl;
-
+            w.col(w.n_cols-1) = arma::vec(w.n_rows)*0.0;
             _Ws.push_back(std::move(w));
         }
         // std::string dummy;
@@ -48,6 +48,9 @@ namespace cnn{
     double FFNN::forward(const arma::vec& xin, const arma::vec& y){
         arma::vec x=xin;
         _input=xin;
+        std::vector<double> auxin = arma::conv_to<std::vector<double>>::from(xin);
+        auxin.push_back(1);
+        _input_1 = arma::vec(auxin);
         _output = y;
 
         for(size_t i=0;i <_layers.size();++i){
@@ -65,36 +68,28 @@ namespace cnn{
         
     }
 
-    void FFNN::backward(){
-        arma::vec dOo = (*_dloss);
-        arma::mat dO = arma::conv_to<arma::mat>::from( dOo % _layers[_layers.size()-1]->backward());
-        for(int i=_layers.size()-1;i>=0;--i){            
-            if(i>0){
-                arma::mat paux= arma::conv_to<arma::mat>::from(_layers[i-1]->getOutputs(true)).t();
-                int xx = paux.size();
-                arma::mat dW = dO * paux ;
-                int wrow = _Ws[i].n_rows;
-                int wcol = _Ws[i].n_cols;
-                int dorow = dO.size();         
-                auto auxaa = _Ws[i].submat(0,0,arma::SizeMat(_Ws[i].n_rows,_Ws[i].n_cols-1));
-                arma::mat dx = dO.t();
-                arma::mat dxW = (dx * auxaa);
-                dO = dxW.t();
-                //std::cout<<"dW["<<i<<"]"<<std::endl<<dW<<std::endl;
-                //std::string dummy;
-                //std::cin>>dummy;
+    void FFNN::backward(){        
+        arma::mat delta = (*_dloss) % _layers[_layers.size()-1]->derivatives();
+
+        for(int i=_layers.size()-1;i>=0;--i){         
+                arma::vec x;   
+                if(i>0){
+                    x = _layers[i-1]->getOutputs(true);
+                }
+                else{
+                    x=_input_1.get();
+                }
+                arma::mat dW = delta * x.t() ;                                                                
                 _Ws[i] += -lr*dW;
-            }
-            else{
-                auto vin = arma::conv_to<std::vector<double>>::from(_input.get());
-                vin.push_back(1.0);
-                arma::mat in_1(vin);
-                arma::mat dW = dO * in_1.t();
-                dO = (dO.t() * _Ws[i].submat(0,0,arma::SizeMat(_Ws[i].n_rows,_Ws[i].n_cols-1))).t();
-                _Ws[i] += -lr*dW;
-            }
+                auto Wv = _Ws[i].submat(0,0,arma::SizeMat(_Ws[i].n_rows,_Ws[i].n_cols-1));
+
+                if(i>0){
+                    delta =  (delta.t() *Wv).t() % _layers[i-1]->derivatives();
+                }
+                
             
         }
+        
     }
 
     arma::vec FFNN::operator()(const arma::vec& x){       

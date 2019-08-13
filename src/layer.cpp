@@ -16,10 +16,8 @@ namespace cnn{
         auto b1 = W.col(x.size());
         auto s = arma::conv_to<std::vector<double>>::from( 
                             arma::conv_to<arma::colvec>::from(a1) + b1
-                            );
-        // std::cout<<"xin"<<x.t()<<std::endl;
-        // std::cout<<"W*x+b"<<(a1+b1).t()<<std::endl;        
-
+                            );              
+        inputs = s;
         int i=0;
         std::vector<double> gf,f;
         for(auto cell:_cells){
@@ -48,7 +46,11 @@ namespace cnn{
         
     }
 
-    arma::vec Layer::backward(){        
+    const arma::vec& Layer::getInputs(){
+        return inputs.get();
+    }
+
+    arma::vec Layer::derivatives(){        
         return doutputs.get();
     }
 

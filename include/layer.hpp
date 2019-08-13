@@ -11,6 +11,7 @@ namespace cnn{
         private:
             size_t Ncells;
             std::vector<Cell> _cells;
+            boost::optional<arma::vec> inputs;
             boost::optional<arma::vec> outputs;
             boost::optional<arma::vec> outputs_1;
             boost::optional<arma::vec> doutputs;
@@ -20,8 +21,9 @@ namespace cnn{
             Layer(size_t number_of_cells,Cell::TActivation f, Cell::TActivation df);
 
             arma::vec forward(const arma::vec& x, const arma::mat& W);
-            arma::vec backward();
+            arma::vec derivatives();
             const arma::vec& getOutputs(bool extended = false);
+            const arma::vec& getInputs();
             size_t size();
             
     };

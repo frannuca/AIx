@@ -17,6 +17,7 @@ namespace cnn{
             boost::optional<double> _loss;
             boost::optional<arma::vec> _dloss;
             boost::optional<arma::vec> _input;
+            boost::optional<arma::vec> _input_1;
             boost::optional<arma::vec> _output;
             double lr;
 
