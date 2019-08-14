@@ -13,7 +13,7 @@ namespace cnn{
     };
 
     typedef std::vector<TrainingSample> TrainingSet;
-    const double epsilon = 1e-9;
+    
 
     class FFNN_Params_Base{  
         public:      

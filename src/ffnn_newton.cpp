@@ -1,4 +1,4 @@
-#include "ffnn_newton.hpp"
+#include "mlp/ffnn_newton.hpp"
 
 namespace cnn{
     FFNN_NEWTON::FFNN_NEWTON(double learning_rate):lr(learning_rate){

@@ -1,4 +1,4 @@
-#include "cnn.hpp"
+#include "cnn/cnn.hpp"
 namespace cnn{
     
 }

@@ -7,7 +7,7 @@
 #include <armadillo>
 #include <functional>
 #include <memory>
-#include "scheduler.hpp"
+#include "concurrency/scheduler.hpp"
 namespace cnn{
 
 using namespace concurrency;

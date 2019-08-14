@@ -2,24 +2,32 @@ cmake_minimum_required(VERSION 3.0.0)
 set(INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include/)
 include_directories(${INCLUDE_PATH})
 
-set(HEADERS ${INCLUDE_PATH}/convolution.hpp 
-            ${INCLUDE_PATH}/commons.hpp 
-            ${INCLUDE_PATH}/threadsafequeue.hpp
+set(HEADERS       
+            ${INCLUDE_PATH}/concurrency/threadsafequeue.hpp            
+            ${INCLUDE_PATH}/concurrency/scheduler.hpp
+            
             ${INCLUDE_PATH}/custom_exceptions.hpp
-            ${INCLUDE_PATH}/scheduler.hpp
-            ${INCLUDE_PATH}/cnn.hpp
-            ${INCLUDE_PATH}/pooling.hpp
+
+            
             ${INCLUDE_PATH}/activations.hpp
             ${INCLUDE_PATH}/preprocessing.hpp
             ${INCLUDE_PATH}/softmax.hpp
-            ${INCLUDE_PATH}/layer.hpp
+            ${INCLUDE_PATH}/constants.hpp            
             ${INCLUDE_PATH}/crossentropylayer.hpp
-            ${INCLUDE_PATH}/cell.hpp
-            ${INCLUDE_PATH}/ffnn.hpp
-            ${INCLUDE_PATH}/ffnn_newton.hpp    
-            ${INCLUDE_PATH}/ffnn_rsprop.hpp    
-            ${INCLUDE_PATH}/inetwork.hpp
-            ${INCLUDE_PATH}/ffnnbuilder.hpp            
+
+            ${INCLUDE_PATH}/cnn/pooling.hpp
+            ${INCLUDE_PATH}/cnn/convolution.hpp
+            ${INCLUDE_PATH}/cnn/cnn.hpp
+            
+
+            ${INCLUDE_PATH}/mlp/commons.hpp 
+            ${INCLUDE_PATH}/mlp/layer.hpp
+            ${INCLUDE_PATH}/mlp/cell.hpp
+            ${INCLUDE_PATH}/mlp/ffnn.hpp
+            ${INCLUDE_PATH}/mlp/ffnn_newton.hpp    
+            ${INCLUDE_PATH}/mlp/ffnn_rsprop.hpp    
+            ${INCLUDE_PATH}/mlp/inetwork.hpp
+            ${INCLUDE_PATH}/mlp/ffnnbuilder.hpp            
             )
 
 enable_testing()

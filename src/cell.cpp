@@ -1,4 +1,4 @@
-#include "cell.hpp"
+#include "mlp/cell.hpp"
 
 namespace cnn{
     Cell::Cell(std::shared_ptr<IActivation> ptr_):ptr(ptr_){

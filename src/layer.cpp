@@ -1,4 +1,4 @@
-#include "layer.hpp"
+#include "mlp/layer.hpp"
 #include <algorithm>
 
 namespace cnn{

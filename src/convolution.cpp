@@ -1,4 +1,4 @@
-#include "../include/convolution.hpp"
+#include "cnn/convolution.hpp"
 #include <iostream>
 #include <future>
 #include <chrono>

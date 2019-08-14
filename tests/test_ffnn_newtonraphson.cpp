@@ -3,13 +3,13 @@
 #include <functional>
 #include <math.h>
 #include <armadillo>
-#include "commons.hpp"
-#include "inetwork.hpp"
-#include "ffnn.hpp"
-#include "ffnn_newton.hpp"
-#include "ffnnbuilder.hpp"
+#include "mlp/commons.hpp"
+#include "mlp/inetwork.hpp"
+#include "mlp/ffnn.hpp"
+#include "mlp/ffnn_newton.hpp"
+#include "mlp/ffnnbuilder.hpp"
 #include "activations.hpp"
-#include "layer.hpp"
+#include "mlp/layer.hpp"
 
 using namespace cnn;
 int main(int argc, char** argv )

@@ -1,6 +1,6 @@
-#include "commons.hpp"
-#include "threadsafequeue.hpp"
-#include "scheduler.hpp"
+
+#include "concurrency/threadsafequeue.hpp"
+#include "concurrency/scheduler.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>

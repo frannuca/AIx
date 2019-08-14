@@ -1,6 +1,6 @@
-#include "ffnnbuilder.hpp"
-#include "ffnn_newton.hpp"
-#include "ffnn_rsprop.hpp"
+#include "mlp/ffnnbuilder.hpp"
+#include "mlp/ffnn_newton.hpp"
+#include "mlp/ffnn_rsprop.hpp"
 namespace cnn{
     #pragma endregion //FFNN implementation
     FFNNBuilder::FFNNBuilder(FFNN_TYPES typ,const FFNN_Params_Base* params){

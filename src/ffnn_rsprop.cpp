@@ -1,4 +1,4 @@
-#include "ffnn_rsprop.hpp"
+#include "mlp/ffnn_rsprop.hpp"
 #include <math.h>
 #include <limits>
 

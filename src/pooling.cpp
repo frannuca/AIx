@@ -1,4 +1,4 @@
-#include "pooling.hpp"
+#include "cnn/pooling.hpp"
 
 namespace cnn{
     std::function<arma::mat(int,int)> get_pooling(const arma::mat& imagex,std::shared_ptr<Scheduler<void>> pScheduler){

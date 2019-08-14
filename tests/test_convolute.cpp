@@ -1,13 +1,14 @@
-#include "commons.hpp"
-#include "threadsafequeue.hpp"
-#include "scheduler.hpp"
+
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
 #include <chrono>
-#include "convolution.hpp"
 #include <armadillo>
+#include "cnn/convolution.hpp"
+#include "constants.hpp"
+#include "concurrency/threadsafequeue.hpp"
+#include "concurrency/scheduler.hpp"
 
 int main(int, char**){
     arma::mat image(17,17);

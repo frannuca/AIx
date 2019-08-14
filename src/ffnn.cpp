@@ -1,4 +1,4 @@
-#include "ffnn.hpp"
+#include "mlp/ffnn.hpp"
 
 namespace cnn{
 

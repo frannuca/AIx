@@ -1,5 +1,5 @@
 #include "crossentropylayer.hpp"
-#include "commons.hpp"
+#include "constants.hpp"
 #include <armadillo>
 
 namespace cnn{
