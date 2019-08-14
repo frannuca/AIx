@@ -1,6 +1,10 @@
 #include "ffnn_newton.hpp"
 
 namespace cnn{
+    FFNN_NEWTON::FFNN_NEWTON(double learning_rate):lr(learning_rate){
+
+    }
+    
     void FFNN_NEWTON::backward() const{        
         arma::mat delta = (*_dloss) % _layers[_layers.size()-1]->derivatives();
 
@@ -12,8 +16,9 @@ namespace cnn{
                 else{
                     x=_input_1.get();
                 }
-                arma::mat dW = delta * x.t() ;                                                                
-                _Ws[i] += -lr*dW;
+                arma::mat dW = delta * x.t();
+                _dWs_accum[i] += dW;
+               
                 auto Wv = _Ws[i].submat(0,0,arma::SizeMat(_Ws[i].n_rows,_Ws[i].n_cols-1));
 
                 if(i>0){
@@ -23,5 +28,12 @@ namespace cnn{
     }
     FFNN_NEWTON::~FFNN_NEWTON(){
 
+    }
+
+    void FFNN_NEWTON::update(double totalerror) const{
+        for(int i=_layers.size()-1;i>=0;--i){ 
+         _Ws[i] += -lr*_dWs_accum[i];
+         _dWs_accum[i] *= 0.0;
+        }
     }
 }

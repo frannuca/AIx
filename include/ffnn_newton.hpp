@@ -9,9 +9,12 @@
 
 namespace cnn{
     class FFNN_NEWTON: public FFNN{
+        private:
+        double lr;
         public:
-        using FFNN::FFNN;
+        explicit FFNN_NEWTON(double learning_rate);
         virtual void backward() const override;
+        virtual void update(double totalerror) const override;
         virtual ~FFNN_NEWTON() override;
     };
 }

@@ -10,7 +10,7 @@
 namespace cnn{
      enum class FFNN_TYPES{
         NEWTON_RAPHSON,
-        NONE
+        RSPROP
     };
 
    class FFNNBuilder{
@@ -18,7 +18,7 @@ namespace cnn{
        std::unique_ptr<FFNN> _instance;
        public:
         FFNNBuilder()=delete;
-        FFNNBuilder(FFNN_TYPES);
+        FFNNBuilder(FFNN_TYPES,const FFNN_Params_Base* params);
         FFNNBuilder& withInputLayer(size_t number_of_inputs);
         FFNNBuilder& withHiddenLayer(size_t ncells, std::shared_ptr<IActivation> fact);
         FFNNBuilder& withOutputLayer(size_t ncells, std::shared_ptr<IActivation> fact);

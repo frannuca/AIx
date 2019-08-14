@@ -3,6 +3,7 @@
 #include <functional>
 #include <math.h>
 #include <armadillo>
+#include "commons.hpp"
 #include "inetwork.hpp"
 #include "ffnn.hpp"
 #include "ffnn_newton.hpp"
@@ -24,7 +25,9 @@ int main(int argc, char** argv )
     };
     
     auto dfloss = [](const arma::vec& x, const arma::vec& y){return (x-y);};
-    FFNNBuilder net(FFNN_TYPES::NEWTON_RAPHSON);
+    cnn::FFNN_RSPROP_Params newtonparams(0.8,0.001,1.2,0.5,0.1);
+    
+    FFNNBuilder net(FFNN_TYPES::RSPROP,&newtonparams);
     
     std::unique_ptr<INetwork> ffnn = net.withInputLayer(2)
                                         .withHiddenLayer(number_of_cells,fact)
@@ -49,7 +52,7 @@ int main(int argc, char** argv )
     tset.push_back(TrainingSample {x2,y2});
     tset.push_back(TrainingSample {x3,y3});
     
-    ffnn->train(tset,1000);
+    ffnn->train(tset,1000,0.01);
 
     std::cout<<"(0,0)->"<<(*ffnn)(x0)<<" expected->"<<y0<<std::endl;
     std::cout<<"(0,1)->"<<(*ffnn)(x1)<<" expected->"<<y1<<std::endl;

@@ -4,8 +4,7 @@ namespace cnn{
 
 
     #pragma region // Implementation of FFNN methods
-    FFNN::FFNN(){
-        lr = 0.33;
+    FFNN::FFNN(){      
     }
     
     void FFNN::withInputLayer(size_t number_of_inputs){
@@ -57,15 +56,21 @@ namespace cnn{
 
     FFNN::~FFNN(){};
 
-    void FFNN::train(const TrainingSet& trainingset, size_t niter) const{
+    double FFNN::train(const TrainingSet& trainingset, size_t niter,double tol) const{
+        double err = 0;
         for(size_t n=0;n<niter;++n){
-            double err=0.0;
+            err=0.0;
             for(auto x:trainingset){
                 
                 err += forward(x.input.col(0),x.output.col(0));
                 backward();
             }
-            std::cout<<"Iteration "<<n<<" Error="<<err<<std::endl;
-        }
+            update(err);
+        std::cout<<"Iteration "<<n<<" Error="<<err<<std::endl;   
+        if(err < tol){
+            break;
+        }             
+        }        
+        return err;
     }
 }
