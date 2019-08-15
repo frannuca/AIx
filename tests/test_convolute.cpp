@@ -18,8 +18,8 @@ int main(int, char**){
     
     std::cout<<"image"<<std::endl<<image<<std::endl;
 
-    auto scheduler = std::make_shared<cnn::concurrency::Scheduler<void>>(3);    
-    auto fconv = cnn::get_convolute(image,2,5,std::move(scheduler));
+    auto& scheduler = cnn::concurrency::getScheduler<void>();    
+    auto fconv = cnn::get_convolute(image,2,5,scheduler);
     auto filtered = fconv(filter);
     
     std::cout<<"filtered"<<std::endl<<filtered<<std::endl;

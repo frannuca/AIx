@@ -16,12 +16,12 @@ namespace cnn
         std::function<arma::mat(const arma::mat&)> 
             get_convolute(const arma::mat& a,
                           size_t stridex, size_t stridey,
-                          std::shared_ptr<Scheduler<void>> pScheduler){
+                          Scheduler<void>& pScheduler){
 
         int Ra = a.n_rows;
         int Ca = a.n_cols;
 
-        return [=](const arma::mat& b){
+        return [Ra,Ca,&pScheduler,stridex,stridey,a](const arma::mat& b){
 
         
         int Rb = b.n_rows;
@@ -35,26 +35,18 @@ namespace cnn
             rc(ni,nj) = arma::accu(tsub % b);
             };
 
-        if(pScheduler){
+        
             std::vector<std::future<void>> v;
             for(int i=0;i<Ny;i++){                        
                 for(int j=0;j<Nx;j++){
                     auto tsub = a.submat(i*stridey,j*stridex,i*stridey+Rb-1,j*stridex+Cb-1);  
                     int ix = i;
                     int jx = j;
-                    v.push_back(std::move(pScheduler->push([ix,jx,&assignvalue,tsub](){assignvalue(ix,jx,tsub);})));
+                    v.push_back(std::move(pScheduler.push([ix,jx,&assignvalue,tsub](){assignvalue(ix,jx,tsub);})));
                 }
             }        
             for(auto& f: v) f.get();
-        }
-        else{
-            for(int i=0;i<Ny;i++){                        
-                for(int j=0;j<Nx;j++){
-                    auto tsub = a.submat(i*stridey,j*stridex,i*stridey+Rb-1,j*stridex+Cb-1);                  
-                    assignvalue(i,j,tsub);
-                }
-            }       
-        }
+        
         return rc;
     };
     }

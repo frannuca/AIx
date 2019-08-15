@@ -2,6 +2,7 @@
 #define XOR_H
 #include "mlp/commons.hpp"
 #include <armadillo>
+using namespace cnn;
 
 class XORDS{
     public:
@@ -22,9 +23,11 @@ class XORDS{
             tset.push_back(TrainingSample {x2,y2});
             tset.push_back(TrainingSample {x3,y3});
 
+            
+
             return tset;
     }
-}
+};
 //data set:
     
 #endif

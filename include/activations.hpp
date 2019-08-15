@@ -20,16 +20,27 @@ namespace cnn{
            double df(const double&) override; 
     };
 
-       class ReLU:public IActivation{
+    class HyperbolicTangent:public IActivation{
         private:
-            const double leak;
-            const double slope;
+            const double c;
         
         public:
-           ReLU()=delete;
-           ReLU(double leak_,double slope_);
+           HyperbolicTangent()=delete;
+           HyperbolicTangent(double c);
            double f(const double&) override; 
            double df(const double&) override; 
     };
+
+    class ReLU:public IActivation{
+    private:
+        const double leak;
+        const double slope;
+    
+    public:
+        ReLU()=delete;
+        ReLU(double leak_,double slope_);
+        double f(const double&) override; 
+        double df(const double&) override; 
+};
 }
 #endif

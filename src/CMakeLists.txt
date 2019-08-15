@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(CNN VERSION 0.1.0)
+project(AIx VERSION 0.1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -20,11 +20,11 @@ if(!Boost_FOUND)
 endif()
 
 include_directories(${Boost_INCLUDE_DIRS})   
-
+include_directories(${CMAKE_SOURCE_DIR}/include/)
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(SOURCES convolution.cpp  
+set(SOURCES		 convolution.cpp  
 			custom_exceptions.cpp  
 			cnn.cpp 
 			pooling.cpp 
@@ -39,9 +39,10 @@ set(SOURCES convolution.cpp
 			ffnnbuilder.cpp	
 			ffnn_rsprop.cpp		
 			${HEADERS})
-add_library(CNN ${SOURCES})
-target_link_libraries(CNN ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
-target_include_directories(CNN PUBLIC ${PROJECT_SOURCE_DIR}/include/)
+		add_library(AIx ${SOURCES})
+		target_link_libraries(AIx ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
+message(INFO ${CMAKE_SOURCE_DIR})
+target_include_directories(AIx PUBLIC ${CMAKE_SOURCE_DIR}/include/)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

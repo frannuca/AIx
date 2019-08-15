@@ -19,7 +19,7 @@ using namespace concurrency;
  * @param pScheduler is the instance of the thread pool scheduler used to parallelized the convolution operation.
  * @returns a function accepting as parameters the filter to be convoluted and returning the convolution image x filter
  */
-std::function<arma::mat(const arma::mat&)> get_convolute(const arma::mat& imagex,size_t stridex, size_t stridey,std::shared_ptr<Scheduler<void>> pScheduler);
+std::function<arma::mat(const arma::mat&)> get_convolute(const arma::mat& imagex,size_t stridex, size_t stridey,Scheduler<void>& pScheduler);
     
 }
 

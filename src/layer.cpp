@@ -4,6 +4,7 @@
 namespace cnn{
 
     Layer::Layer(size_t number_of_cells,std::shared_ptr<IActivation> pact):Ncells(number_of_cells){
+        isactivation_relu=dynamic_cast<cnn::ReLU*>(pact.get())==nullptr;
         auto cellproto = Cell(pact);
         for(size_t i=0;i<number_of_cells;++i) _cells.push_back(cellproto);
     }
@@ -54,4 +55,7 @@ namespace cnn{
         return doutputs.get();
     }
 
+    bool Layer::isActivationReLU() const{
+        return isactivation_relu;
+    }
 }

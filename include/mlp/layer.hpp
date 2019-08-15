@@ -11,6 +11,7 @@
 namespace cnn{
     class Layer{
         private:
+            bool isactivation_relu;            
             size_t Ncells;
             std::vector<Cell> _cells;
             boost::optional<arma::vec> inputs;
@@ -27,6 +28,7 @@ namespace cnn{
             const arma::vec& getOutputs(bool extended = false);
             const arma::vec& getInputs();
             size_t size();
+            bool isActivationReLU() const;
             
     };
 }

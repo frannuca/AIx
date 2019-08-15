@@ -7,7 +7,7 @@ using namespace cv;
 
 int main(int argc, char** argv )
 {
-    auto imagepath = "~/code/cpp/github/cnn/resources/lena_color.jpg";   
+    auto imagepath = "../../resources/lena_color.jpg";   
 
     Mat image;
     image = imread(imagepath, cv::IMREAD_COLOR );    
@@ -27,10 +27,11 @@ int main(int argc, char** argv )
 
     auto graymat =  cnn::preprocessing::get_normalized_rgb_image_transform_gray(&imageshrunk);
     std::cout<<"GRAYSCALE"<<std::endl<<*graymat<<std::endl;
-    namedWindow("Display Image", WINDOW_AUTOSIZE );
-    imshow("Display Image", imageshrunk);
+    //namedWindow("Display Image", WINDOW_AUTOSIZE );
+    //imshow("Display Image", imageshrunk);
     //imshow("Display Image", image);
-    waitKey(0);
+    //waitKey(0);
 
+    std::cout<<"OK";
     return 0;
 }

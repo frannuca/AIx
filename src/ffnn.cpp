@@ -1,4 +1,5 @@
 #include "mlp/ffnn.hpp"
+#include "concurrency/scheduler.hpp"
 
 namespace cnn{
 
@@ -57,20 +58,36 @@ namespace cnn{
     FFNN::~FFNN(){};
 
     double FFNN::train(const TrainingSet& trainingset, size_t niter,double tol) const{
-        double err = 0;
+        
+        auto& scheduler = cnn::concurrency::getScheduler<double>();
+
+        double totalerr=0;
         for(size_t n=0;n<niter;++n){
-            err=0.0;
-            for(auto x:trainingset){
-                
-                err += forward(x.input.col(0),x.output.col(0));
-                backward();
+            std::vector<std::future<double>> fres;
+            fres.push_back(
+                std::move(
+                            scheduler.push([&](){
+                            double err = 0;
+                            for(auto x:trainingset){                
+                                err += forward(x.input.col(0),x.output.col(0));
+                                backward();
+                            };
+                            return err;
+            })));
+            
+            
+            
+            totalerr=0;
+
+            for(auto& f: fres ){
+                totalerr+=f.get();
             }
-            update(err);
-        std::cout<<"Iteration "<<n<<" Error="<<err<<std::endl;   
-        if(err < tol){
+            update(totalerr);
+        std::cout<<"Iteration "<<n<<" Error="<<totalerr<<std::endl;   
+        if(totalerr < tol){
             break;
         }             
         }        
-        return err;
+        return totalerr;
     }
 }

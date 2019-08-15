@@ -57,13 +57,16 @@ namespace cnn{
         auto& _outputLayer = _instance->_outputLayer;
         _layers.push_back(std::move(_outputLayer));
         _Ws.clear();
-        for(size_t i=0;i< _instance->_layers.size();++i){
+        for(size_t i=0;i< _instance->_layers.size();++i){  
+            bool isReLU = _layers[i]->isActivationReLU();
+            double scalingfactor = isReLU?2.0:1.0;
             arma::mat w;
             if(i==0){
-                w= arma::randu(arma::SizeMat(_layers[i]->size(),_number_inputs+1))*std::sqrt(1.0/_number_inputs);
+                
+                w=  arma::randu(arma::SizeMat(_layers[i]->size(),_number_inputs+1))*std::sqrt(scalingfactor/(_number_inputs+_layers[i]->size()));
             }
             else{
-                w= arma::randu(arma::SizeMat(_layers[i]->size(),_layers[i-1]->size()+1))*std::sqrt(1.0/_layers[i]->size());
+                w= arma::randu(arma::SizeMat(_layers[i]->size(),_layers[i-1]->size()+1))*std::sqrt(scalingfactor/(_layers[i]->size()+_layers[i-1]->size()));
             }           
             w.col(w.n_cols-1) = arma::vec(w.n_rows)*0.0;
             _dWs_accum.push_back(arma::mat(w.n_rows,w.n_cols,arma::fill::zeros));

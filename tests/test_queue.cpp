@@ -20,8 +20,7 @@ int main(int, char**) {
     std::cout<<"one="<<one<<std::endl;
     std::cout<<"two="<<*twop<<std::endl;
 
-    cnn::concurrency::Scheduler<void> scheduler(2);
-    scheduler.start();
+    cnn::concurrency::Scheduler<void>& scheduler= cnn::concurrency::getScheduler<void>();    
     std::vector<std::future<void>> fos;
     auto time0 = std::chrono::steady_clock::now();
     std::vector<std::future<void>> v;

@@ -12,6 +12,17 @@ namespace cnn{
         return c*f(x) * (1-f(x));
     }
 
+    HyperbolicTangent::HyperbolicTangent(double c_):c(std::abs(c_)){}
+
+    double HyperbolicTangent::f(const double& x){
+        return (std::exp(c*x)-std::exp(-c*x))/(std::exp(c*x)+std::exp(-c*x));
+    }
+
+    double HyperbolicTangent::df(const double& x){
+        double a = f(x);
+        return c*(1.0-a*a);
+    }
+
     ReLU::ReLU(double leak_,double slope_):leak(std::abs(leak_)),slope(std::abs(slope_)){}
     double ReLU::f(const double& x){
         if(x<0){
