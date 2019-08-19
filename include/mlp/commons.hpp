@@ -4,7 +4,8 @@
 #include <armadillo>
 #include <vector>
 #include <utility>
-namespace cnn{
+namespace AIX{
+    namespace MLP{
     
     
     struct TrainingSample{
@@ -40,6 +41,7 @@ namespace cnn{
         double initial_learning_rate;
         virtual ~FFNN_RSPROP_Params(){};
     };
+}
 }
 
 #endif

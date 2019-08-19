@@ -1,6 +1,7 @@
 #include "mlp/cell.hpp"
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
     Cell::Cell(std::shared_ptr<IActivation> ptr_):ptr(ptr_){
 
     }
@@ -14,4 +15,5 @@ namespace cnn{
     std::tuple<double,double> Cell::getData(){
         return std::make_tuple(_fx.get(),_dfx.get());
     }
+}
 }

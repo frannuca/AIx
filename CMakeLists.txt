@@ -9,18 +9,18 @@ set(HEADERS
             ${INCLUDE_PATH}/custom_exceptions.hpp
 
             
-            ${INCLUDE_PATH}/activations.hpp
-            ${INCLUDE_PATH}/preprocessing.hpp
+            ${INCLUDE_PATH}/activations.hpp            
             ${INCLUDE_PATH}/softmax.hpp
             ${INCLUDE_PATH}/constants.hpp            
             ${INCLUDE_PATH}/crossentropylayer.hpp
 
+            ${INCLUDE_PATH}/cnn/preprocessing.hpp 
             ${INCLUDE_PATH}/cnn/pooling.hpp
             ${INCLUDE_PATH}/cnn/convolution.hpp
             ${INCLUDE_PATH}/cnn/cnn.hpp
             
 
-            ${INCLUDE_PATH}/mlp/commons.hpp 
+            ${INCLUDE_PATH}/mlp/commons.hpp            
             ${INCLUDE_PATH}/mlp/layer.hpp
             ${INCLUDE_PATH}/mlp/cell.hpp
             ${INCLUDE_PATH}/mlp/ffnn.hpp
@@ -28,6 +28,8 @@ set(HEADERS
             ${INCLUDE_PATH}/mlp/ffnn_rsprop.hpp    
             ${INCLUDE_PATH}/mlp/inetwork.hpp
             ${INCLUDE_PATH}/mlp/ffnnbuilder.hpp            
+            
+            ${INCLUDE_PATH}/nlp/nlpprocessor.hpp            
             )
 
 enable_testing()

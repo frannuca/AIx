@@ -1,14 +1,14 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
 #include <iostream>
-#include "custom_exceptions.hpp"
+#include "../custom_exceptions.hpp"
 #include <thread>
 #include <mutex>
 #include <functional>
 #include <memory>
 #include "threadsafequeue.hpp"
-namespace cnn{
-    namespace concurrency{
+namespace AIX{
+    namespace Concurrency{
         template<typename T> class Scheduler;
         template<typename T> Scheduler<T>& getScheduler();
 

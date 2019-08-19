@@ -2,8 +2,10 @@
 #define CNN_H
 #include <cstddef>
 #include <vector>
-
-namespace cnn{
+namespace AIX{
+namespace CNN{
 
 }
+}
+
 #endif

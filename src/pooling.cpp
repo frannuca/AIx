@@ -1,9 +1,9 @@
 #include "cnn/pooling.hpp"
 
-namespace cnn{
+namespace AIX{namespace CNN{
     std::function<arma::mat(int,int)> get_pooling(const arma::mat& imagex,std::shared_ptr<Scheduler<void>> pScheduler){
         
-        using namespace concurrency;
+        using namespace Concurrency;
             
 
         int Ra = imagex.n_rows;
@@ -47,4 +47,4 @@ namespace cnn{
         return rc;
     };
 }
-}
+}}

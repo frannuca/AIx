@@ -1,6 +1,6 @@
 #include "custom_exceptions.hpp"
 
-namespace cnn{
+namespace AIX{
             TimeOutException::TimeOutException(const char* msg):msg_(msg){};
             TimeOutException::TimeOutException(const string& msg):msg_(msg){};
             TimeOutException::~TimeOutException() throw(){};

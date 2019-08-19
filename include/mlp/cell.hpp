@@ -2,10 +2,11 @@
 #define CELL_H
 #include <functional>
 #include <boost/optional.hpp>
-#include "activations.hpp"
+#include "../activations.hpp"
 #include <memory>
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
     class Cell{                                
         private:      
             std::shared_ptr<IActivation> ptr;      
@@ -20,5 +21,6 @@ namespace cnn{
             void compute(const double& x);
             std::tuple<double,double> getData();
     };
+}
 }
 #endif

@@ -8,9 +8,10 @@
 #include <functional>
 #include <memory>
 #include "concurrency/scheduler.hpp"
-namespace cnn{
+namespace AIX{
+namespace CNN{
 
-using namespace concurrency;
+using namespace Concurrency;
 /**
  * Generates a convolution function on 2D images, represented as matrix.
  * @param imagex is the input images to be convoluted.
@@ -22,5 +23,5 @@ using namespace concurrency;
 std::function<arma::mat(int,int)> get_pooling(const arma::mat& imagex,std::shared_ptr<Scheduler<void>> pScheduler);
     
 }
-
+}
 #endif

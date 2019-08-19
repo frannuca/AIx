@@ -6,8 +6,8 @@
 #include <armadillo>
 #include <map>
 
-namespace cnn{
-    namespace preprocessing{
+namespace AIX{
+    namespace CNN{
 
          enum class ImageChannel{
             RED,

@@ -9,9 +9,9 @@
 #include <algorithm>
 #include <memory>
 
-namespace cnn
+namespace AIX{namespace CNN
 {
-    using namespace concurrency;
+    using namespace Concurrency;
     
         std::function<arma::mat(const arma::mat&)> 
             get_convolute(const arma::mat& a,
@@ -50,4 +50,4 @@ namespace cnn
         return rc;
     };
     }
-} // namespace cnn
+}} // namespace cnn

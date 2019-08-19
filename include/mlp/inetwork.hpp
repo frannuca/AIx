@@ -4,7 +4,9 @@
 #include <armadillo>
 #include "commons.hpp"
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
+    
     class INetwork{
         public:
         virtual double forward(const arma::vec& xin, const arma::vec& y) const = 0;
@@ -15,5 +17,7 @@ namespace cnn{
         
         virtual ~INetwork(){};
     };
+
+}
 }
 #endif

@@ -1,7 +1,7 @@
 #include "activations.hpp"
 #include <math.h>
 
-namespace cnn{
+namespace AIX{
     Sigmoid::Sigmoid(double c_):c(std::abs(c_)){}
 
     double Sigmoid::f(const double& x){

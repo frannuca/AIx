@@ -10,9 +10,9 @@
 #include <chrono>
 #include <exception>
 #include <limits>
-#include "custom_exceptions.hpp"
-namespace cnn{
-    namespace concurrency{
+#include "../custom_exceptions.hpp"
+namespace AIX{
+    namespace Concurrency{
         using namespace std;
        
         template<typename T>

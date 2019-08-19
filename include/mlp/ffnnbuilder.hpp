@@ -7,7 +7,8 @@
 #include "inetwork.hpp"
 #include "ffnn.hpp"
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
      enum class FFNN_TYPES{
         NEWTON_RAPHSON,
         RSPROP
@@ -26,5 +27,6 @@ namespace cnn{
                                        std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss);
         std::unique_ptr<INetwork> Build();                        
    };
+}
 }
 #endif

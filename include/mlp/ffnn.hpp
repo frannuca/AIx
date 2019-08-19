@@ -6,7 +6,9 @@
 #include <armadillo>
 #include "inetwork.hpp"
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
+        
  class FFNNBuilder;
  class FFNN: public INetwork{
         public:
@@ -40,5 +42,6 @@ namespace cnn{
     };
 
 
+}
 }
 #endif

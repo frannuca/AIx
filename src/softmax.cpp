@@ -1,5 +1,5 @@
 #include "softmax.hpp"
 
-namespace cnn{
+namespace AIX{
 Softmax::Softmax(){}
 }

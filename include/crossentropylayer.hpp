@@ -2,7 +2,7 @@
 #define CROSSENTROPYLAYER_H
 #include <armadillo>
 
-namespace cnn{
+namespace AIX{
 class CrossEntropyLayer{
     protected:        
         arma::vec forward(const arma::vec& xinput,const arma::vec& xoutput);

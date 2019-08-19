@@ -1,7 +1,7 @@
 #ifndef ACTIVATIONS_H
 #define ACTIVATIONS_H
 
-namespace cnn{
+namespace AIX{
     class IActivation{
         public:
            virtual double f(const double&) = 0; 

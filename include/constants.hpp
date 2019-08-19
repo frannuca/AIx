@@ -1,6 +1,6 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
-namespace cnn{
+namespace AIX{
     const double epsilon = 1e-9;
 }
 

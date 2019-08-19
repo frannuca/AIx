@@ -1,7 +1,7 @@
 #include "mlp/ffnnbuilder.hpp"
 #include "mlp/ffnn_newton.hpp"
 #include "mlp/ffnn_rsprop.hpp"
-namespace cnn{
+namespace AIX{namespace MLP{
     #pragma endregion //FFNN implementation
     FFNNBuilder::FFNNBuilder(FFNN_TYPES typ,const FFNN_Params_Base* params){
         FFNN* ptr=nullptr;
@@ -75,4 +75,4 @@ namespace cnn{
         _instance->init();
         return std::move(_instance);
     }
-}
+}}

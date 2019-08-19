@@ -10,6 +10,8 @@
 #include "concurrency/threadsafequeue.hpp"
 #include "concurrency/scheduler.hpp"
 
+using namespace AIX;
+
 int main(int, char**){
     arma::mat image(17,17);
     image.randn();
@@ -18,8 +20,8 @@ int main(int, char**){
     
     std::cout<<"image"<<std::endl<<image<<std::endl;
 
-    auto& scheduler = cnn::concurrency::getScheduler<void>();    
-    auto fconv = cnn::get_convolute(image,2,5,scheduler);
+    auto& scheduler = Concurrency::getScheduler<void>();    
+    auto fconv = CNN::get_convolute(image,2,5,scheduler);
     auto filtered = fconv(filter);
     
     std::cout<<"filtered"<<std::endl<<filtered<<std::endl;

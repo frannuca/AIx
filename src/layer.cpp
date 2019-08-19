@@ -1,10 +1,12 @@
 #include "mlp/layer.hpp"
 #include <algorithm>
+#include <utility>
+#include <type_traits>
 
-namespace cnn{
+namespace AIX{namespace MLP{
 
     Layer::Layer(size_t number_of_cells,std::shared_ptr<IActivation> pact):Ncells(number_of_cells){
-        isactivation_relu=dynamic_cast<cnn::ReLU*>(pact.get())==nullptr;
+        isactivation_relu=dynamic_cast<ReLU*>(pact.get())==nullptr;
         auto cellproto = Cell(pact);
         for(size_t i=0;i<number_of_cells;++i) _cells.push_back(cellproto);
     }
@@ -13,10 +15,13 @@ namespace cnn{
     }
 
     arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W){
-        auto a1 = W.submat(0,0,arma::SizeMat(W.n_rows,x.size())) * x;
-        auto b1 = W.col(x.size());
+        auto& wn = W.submat(0,0,arma::SizeMat(W.n_rows,x.size()));
+        auto a1 = wn * x;
+        auto& b1 = W.col(x.size());
+        auto c = a1 + b1;
+
         auto s = arma::conv_to<std::vector<double>>::from( 
-                            arma::conv_to<arma::colvec>::from(a1) + b1
+                            c
                             );              
         inputs = s;
         int i=0;
@@ -58,4 +63,4 @@ namespace cnn{
     bool Layer::isActivationReLU() const{
         return isactivation_relu;
     }
-}
+}}

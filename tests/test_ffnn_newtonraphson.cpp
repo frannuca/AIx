@@ -11,7 +11,8 @@
 #include "activations.hpp"
 #include "mlp/layer.hpp"
 #include "xor.hpp"
-using namespace cnn;
+using namespace AIX;
+using namespace AIX::MLP;
 int main(int argc, char** argv )
 {
     size_t number_of_cells = 2;
@@ -25,7 +26,7 @@ int main(int argc, char** argv )
     };
     
     auto dfloss = [](const arma::vec& x, const arma::vec& y){return (x-y);};
-    cnn::FFNN_Newton_Raphson_Params newtonparams(0.33);
+    FFNN_Newton_Raphson_Params newtonparams(0.33);
     
     FFNNBuilder net(FFNN_TYPES::NEWTON_RAPHSON,&newtonparams);
     
@@ -37,7 +38,7 @@ int main(int argc, char** argv )
                 
     //data set:
    
-    cnn::TrainingSet tset = XORDS::GetXORSet();
+    TrainingSet tset = XORDS::GetXORSet();
     ffnn->train(tset,1000,0.01);
 
     std::cout<<"(0,0)->"<<(*ffnn)(tset[0].input)<<" expected->"<<tset[0].output<<std::endl;

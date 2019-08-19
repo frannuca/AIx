@@ -1,6 +1,6 @@
 #include "mlp/ffnn_newton.hpp"
 
-namespace cnn{
+namespace AIX{namespace MLP{
     FFNN_NEWTON::FFNN_NEWTON(double learning_rate):lr(learning_rate){
 
     }
@@ -36,4 +36,4 @@ namespace cnn{
          _dWs_accum[i] *= 0.0;
         }
     }
-}
+}}

@@ -2,7 +2,7 @@
 #define SOFTMAX_H
 
 
-namespace cnn{
+namespace AIX{
 
     class Softmax{
     public:

@@ -1,7 +1,7 @@
-#include "preprocessing.hpp"
+#include "cnn/preprocessing.hpp"
 
-namespace cnn{
-    namespace preprocessing{
+namespace AIX{namespace CNN{
+    
         std::function<cv::Mat*(const cv::Mat*)> get_image_size_transform(size_t size_x,size_t size_y){
             cv::Size dstsz(size_x,size_y);
             return [size_x,size_y,dstsz](const cv::Mat* input){
@@ -55,5 +55,5 @@ namespace cnn{
                 return dest; 
         }        
                 
-    }
-}
+    
+}}

@@ -8,7 +8,8 @@
 #include "activations.hpp"
 #include <boost/optional.hpp>
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
     class Layer{
         private:
             bool isactivation_relu;            
@@ -31,5 +32,6 @@ namespace cnn{
             bool isActivationReLU() const;
             
     };
+}
 }
 #endif

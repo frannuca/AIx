@@ -11,7 +11,7 @@
 #include <exception>
 #include <limits>
 
-namespace cnn{
+namespace AIX{
     
         using namespace std;
 

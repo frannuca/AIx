@@ -1,7 +1,7 @@
 #include "mlp/ffnn.hpp"
 #include "concurrency/scheduler.hpp"
 
-namespace cnn{
+namespace AIX{namespace MLP{
 
 
     #pragma region // Implementation of FFNN methods
@@ -59,7 +59,7 @@ namespace cnn{
 
     double FFNN::train(const TrainingSet& trainingset, size_t niter,double tol) const{
         
-        auto& scheduler = cnn::concurrency::getScheduler<double>();
+        auto& scheduler = Concurrency::getScheduler<double>();
 
         double totalerr=0;
         for(size_t n=0;n<niter;++n){
@@ -90,4 +90,4 @@ namespace cnn{
         }        
         return totalerr;
     }
-}
+}}

@@ -9,7 +9,8 @@
 #include "ffnn.hpp"
 #include <armadillo>
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
     class FFNN_RSPROP: public FFNN{
         private:
         mutable std::vector<std::vector<arma::mat>> _dWs;
@@ -30,6 +31,7 @@ namespace cnn{
         void init() override;
         virtual ~FFNN_RSPROP() override{};
     };
+}
 }
 
 #endif

@@ -2,7 +2,7 @@
 #include <math.h>
 #include <limits>
 
-namespace cnn{
+namespace AIX{namespace MLP{
 
     void FFNN_RSPROP::init() {
         for(auto&w :_Ws){
@@ -94,4 +94,4 @@ namespace cnn{
                 _Ws_before[l] = _Ws[l];                          
             }            
     }
-}
+}}

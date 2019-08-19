@@ -9,9 +9,10 @@
 
 
 //main program test
+using namespace AIX;
 int main(int, char**) {
     
-    cnn::concurrency::ThreadSafeQueue<double> tsqueue;
+    Concurrency::ThreadSafeQueue<double> tsqueue;
     tsqueue.push(1.0);
     tsqueue.push(2.0);
     double one;
@@ -20,7 +21,7 @@ int main(int, char**) {
     std::cout<<"one="<<one<<std::endl;
     std::cout<<"two="<<*twop<<std::endl;
 
-    cnn::concurrency::Scheduler<void>& scheduler= cnn::concurrency::getScheduler<void>();    
+    Concurrency::Scheduler<void>& scheduler= Concurrency::getScheduler<void>();    
     std::vector<std::future<void>> fos;
     auto time0 = std::chrono::steady_clock::now();
     std::vector<std::future<void>> v;

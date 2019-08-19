@@ -2,7 +2,7 @@
 #include "constants.hpp"
 #include <armadillo>
 
-namespace cnn{
+namespace AIX{
     CrossEntropyLayer::CrossEntropyLayer(){}
 
     arma::vec CrossEntropyLayer::forward(const arma::vec& xinput,const arma::vec& xoutput){

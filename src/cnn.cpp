@@ -1,4 +1,7 @@
 #include "cnn/cnn.hpp"
-namespace cnn{
+namespace AIX{
+    namespace CNN{
+        
+    }
     
 }

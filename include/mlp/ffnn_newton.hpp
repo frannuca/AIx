@@ -7,7 +7,8 @@
 #include "inetwork.hpp"
 #include "ffnn.hpp"
 
-namespace cnn{
+namespace AIX{
+    namespace MLP{
     class FFNN_NEWTON: public FFNN{
         private:
         double lr;
@@ -18,5 +19,5 @@ namespace cnn{
         virtual ~FFNN_NEWTON() override;
     };
 }
-
+}
 #endif

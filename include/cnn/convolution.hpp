@@ -7,10 +7,11 @@
 #include <armadillo>
 #include <functional>
 #include <memory>
-#include "concurrency/scheduler.hpp"
-namespace cnn{
+#include "../concurrency/scheduler.hpp"
+namespace AIX{
+namespace CNN{
 
-using namespace concurrency;
+using namespace Concurrency;
 /**
  * Generates a convolution function on 2D images, represented as matrix.
  * @param imagex is the input images to be convoluted.
@@ -22,5 +23,5 @@ using namespace concurrency;
 std::function<arma::mat(const arma::mat&)> get_convolute(const arma::mat& imagex,size_t stridex, size_t stridey,Scheduler<void>& pScheduler);
     
 }
-
+}
 #endif
