@@ -1,8 +1,9 @@
 #include "mlp/ffnnbuilder.hpp"
 #include "mlp/ffnn_newton.hpp"
 #include "mlp/ffnn_rsprop.hpp"
+#include "mlp/softmax.hpp"
 namespace AIX{namespace MLP{
-    #pragma endregion //FFNN implementation
+    
     FFNNBuilder::FFNNBuilder(FFNN_TYPES typ,const FFNN_Params_Base* params){
         FFNN* ptr=nullptr;
         if(typ == FFNN_TYPES::NEWTON_RAPHSON)
@@ -43,6 +44,12 @@ namespace AIX{namespace MLP{
        _instance->withOutputLayer(std::move(p));
         return *this;
     }
+    FFNNBuilder& FFNNBuilder::withSoftmaxOutputLayer(size_t ncells){
+       std::unique_ptr<Layer> p(new Softmax(ncells));
+       _instance->withOutputLayer(std::move(p));
+        return *this;
+    }
+
     FFNNBuilder& FFNNBuilder::withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> loss,
                                                 std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss){
         _instance->withLossFunctions(loss,grad_loss);

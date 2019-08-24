@@ -31,6 +31,17 @@ namespace AIX{
            double df(const double&) override; 
     };
 
+    class Exponential:public IActivation{
+        private:
+            const double c;
+        
+        public:
+           Exponential()=delete;
+           Exponential(double c);
+           double f(const double&) override; 
+           double df(const double&) override; 
+    };
+
     class ReLU:public IActivation{
     private:
         const double leak;

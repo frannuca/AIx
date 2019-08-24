@@ -9,6 +9,7 @@
 
 namespace AIX{
     namespace MLP{
+        
      enum class FFNN_TYPES{
         NEWTON_RAPHSON,
         RSPROP
@@ -23,6 +24,7 @@ namespace AIX{
         FFNNBuilder& withInputLayer(size_t number_of_inputs);
         FFNNBuilder& withHiddenLayer(size_t ncells, std::shared_ptr<IActivation> fact);
         FFNNBuilder& withOutputLayer(size_t ncells, std::shared_ptr<IActivation> fact);
+        FFNNBuilder& withSoftmaxOutputLayer(size_t ncells);
         FFNNBuilder& withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> loss,
                                        std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss);
         std::unique_ptr<INetwork> Build();                        

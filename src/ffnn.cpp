@@ -36,7 +36,7 @@ namespace AIX{namespace MLP{
         _output = y;
 
         for(size_t i=0;i <_layers.size();++i){
-            x = _layers[i]->forward(x,_Ws[i]);
+            x = _layers[i]->forward(x,_Ws[i],&y);
         } 
 
         //compute loss:
