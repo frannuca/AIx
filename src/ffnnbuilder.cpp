@@ -2,6 +2,8 @@
 #include "mlp/ffnn_newton.hpp"
 #include "mlp/ffnn_rsprop.hpp"
 #include "mlp/softmax.hpp"
+
+
 namespace AIX{namespace MLP{
     
     FFNNBuilder::FFNNBuilder(FFNN_TYPES typ,const FFNN_Params_Base* params){
@@ -56,6 +58,13 @@ namespace AIX{namespace MLP{
         return *this;         
     }
 
+    FFNNBuilder& FFNNBuilder::withLossFunctions(const AIX::LossFunction* floss){ 
+        auto f1 = [floss](const arma::vec& x,const arma::vec& y){return floss->loss(x,y);};        
+        auto df1 = [floss](const arma::vec& x,const arma::vec& y){return floss->derivative(x,y);};
+        _instance->withLossFunctions(f1,df1);
+        return *this;         
+    }
+
     std::unique_ptr<INetwork> FFNNBuilder::Build(){
         auto& _layers =  _instance->_layers;
         auto& _Ws = _instance->_Ws;
@@ -74,6 +83,7 @@ namespace AIX{namespace MLP{
             }
             else{
                 w= arma::randu(arma::SizeMat(_layers[i]->size(),_layers[i-1]->size()+1))*std::sqrt(scalingfactor/(_layers[i]->size()+_layers[i-1]->size()));
+                
             }           
             w.col(w.n_cols-1) = arma::vec(w.n_rows)*0.0;
             _dWs_accum.push_back(arma::mat(w.n_rows,w.n_cols,arma::fill::zeros));

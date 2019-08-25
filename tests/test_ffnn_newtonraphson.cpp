@@ -20,10 +20,7 @@ int main(int argc, char** argv )
     std::shared_ptr<IActivation> sigmoid(new Sigmoid(c));
     std::shared_ptr<IActivation> relu(new ReLU(0.001,2.0));
     std::shared_ptr<IActivation> fact = sigmoid;
-    auto floss = [](const arma::vec& x, const arma::vec& y){
-                auto d = arma::sum((x-y)*(x-y));
-                return d*0.5;
-    };
+    AIX::LeastSquaresLoss floss;
     
     auto dfloss = [](const arma::vec& x, const arma::vec& y){return (x-y);};
     FFNN_Newton_Raphson_Params newtonparams(0.33);
@@ -33,7 +30,7 @@ int main(int argc, char** argv )
     std::unique_ptr<INetwork> ffnn = net.withInputLayer(2)
                                         .withHiddenLayer(number_of_cells,fact)
                                         .withOutputLayer(1,fact)
-                                        .withLossFunctions(floss,dfloss)
+                                        .withLossFunctions(&floss)
                                         .Build();
                 
     //data set:

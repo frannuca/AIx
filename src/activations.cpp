@@ -12,14 +12,14 @@ namespace AIX{
         return c*f(x) * (1-f(x));
     }
 
-    Exponential::Exponential(double c_):c(std::abs(c_)){}
+    Exponential::Exponential(double c_):c(c_){}
 
     double Exponential::f(const double& x){
-        return std::exp(-c*x);
+        return std::exp(c*x);
     }
 
     double Exponential::df(const double& x){
-        return -c* std::exp(-c*x);
+        return c* std::exp(c*x);
     }
 
     HyperbolicTangent::HyperbolicTangent(double c_):c(std::abs(c_)){}

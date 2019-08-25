@@ -50,7 +50,7 @@ namespace AIX{namespace MLP{
     arma::vec FFNN::operator()(const arma::vec& x) const{       
         arma::vec s = x;
         for(size_t i=0;i <_layers.size();++i){
-            s = _layers[i]->forward(s,_Ws[i]);
+            s = _layers[i]->forward(s,_Ws[i],nullptr);
         } 
         return s;
     }
@@ -59,29 +59,20 @@ namespace AIX{namespace MLP{
 
     double FFNN::train(const TrainingSet& trainingset, size_t niter,double tol) const{
         
-        auto& scheduler = Concurrency::getScheduler<double>();
+        //auto& scheduler = Concurrency::getScheduler<double>();
 
-        double totalerr=0;
+        double totalerr=0; 
         for(size_t n=0;n<niter;++n){
-            std::vector<std::future<double>> fres;
-            fres.push_back(
-                std::move(
-                            scheduler.push([&](){
-                            double err = 0;
-                            for(auto x:trainingset){                
-                                err += forward(x.input.col(0),x.output.col(0));
-                                backward();
-                            };
-                            return err;
-            })));
+           totalerr=0; 
             
-            
-            
-            totalerr=0;
+            for(auto x:trainingset){                
+                totalerr += forward(x.input.col(0),x.output.col(0));
+                backward();
+            };
 
-            for(auto& f: fres ){
-                totalerr+=f.get();
-            }
+
+            
+                       
             update(totalerr);
         std::cout<<"Iteration "<<n<<" Error="<<totalerr<<std::endl;   
         if(totalerr < tol){

@@ -19,7 +19,9 @@ namespace AIX{namespace MLP{
     _lrplus(lrplus),_lrminus(lrminus),_maxlr(maxlr),_minlr(minlr),_lr0(initial_lr) {}
 
     void FFNN_RSPROP::backward() const{        
-
+        //std::cout<<"DLOSS"<<std::endl<<*_dloss<<std::endl;
+        //std::cout<<"OutputDerivatives"<<std::endl<<_layers[_layers.size()-1]->derivatives()<<std::endl;
+        //std::cout<<"Outputs"<<std::endl<<_layers[_layers.size()-1]->getOutputs()<<std::endl;
         arma::mat delta = (*_dloss) % _layers[_layers.size()-1]->derivatives();
 
         for(int i=_layers.size()-1;i>=0;--i){         
@@ -30,7 +32,10 @@ namespace AIX{namespace MLP{
                 else{
                     x=_input_1.get();
                 }
+                //std::cout<<"o[layer("<<i<<")]"<<std::endl<<x<<std::endl;
                 arma::mat dW = delta * x.t();
+
+                //std::cout<<"dW"<<std::endl<<dW<<std::endl;
                 _dWs_accum[i]+= dW;
 
                 auto Wv = _Ws[i].submat(0,0,arma::SizeMat(_Ws[i].n_rows,_Ws[i].n_cols-1));

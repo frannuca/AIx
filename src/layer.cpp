@@ -14,7 +14,7 @@ namespace AIX{namespace MLP{
         return Ncells;
     }
 
-    arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W,const arma::vec* out){
+    arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W,const arma::vec* dummy){
         auto& wn = W.submat(0,0,arma::SizeMat(W.n_rows,x.size()));
         auto a1 = wn * x;
         auto& b1 = W.col(x.size());

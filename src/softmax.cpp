@@ -6,10 +6,11 @@
 #include <math.h>
 #include <memory>
 
+int c_exp = 1.0;
 namespace AIX{
     namespace MLP{
 
-        Softmax::Softmax(size_t number_of_classes_):Layer(number_of_classes_,std::shared_ptr<AIX::Exponential>(new AIX::Exponential(1.0))){
+        Softmax::Softmax(size_t number_of_classes_):Layer(number_of_classes_,std::shared_ptr<AIX::Exponential>(new AIX::Exponential(c_exp))){
             isactivation_relu=false;                        
         }
         
@@ -26,6 +27,7 @@ namespace AIX{
         int i=0;
         int istatus=-1;
         std::vector<double> f;
+        double total =0.0;
         for(auto cell:_cells){
             if(yout != nullptr){
                 if((*yout)(i)==1.0){
@@ -35,22 +37,31 @@ namespace AIX{
             cell.compute((*s)(i++));
             double out,dout;
             std::tie(out,dout) = cell.getData();
+            total += out;
             f.push_back(out);            
         }
 
        
 
-        double total = std::accumulate(f.begin(),f.end(),0.0);
-        for(auto x:f) x/=total;
+        
+        if(total != total){
+            std::cout<<W<<std::endl;
+            std::cout<<x<<std::endl;
+            std::cout<<*yout<<std::endl;
+        }
+        
+        for(int i=0;i<f.size();++i){
+            f[i] = f[i]/total;
+        }
         
         std::vector<double> gf;
         for(size_t i = 0; i<f.size() && istatus >=0;++i){
             
             if(istatus == i){
-                gf.push_back(-f[i]*(1.0-f[i]));                
+                gf.push_back(c_exp*f[istatus]*(1.0-f[istatus]));                
             }
             else{
-                gf.push_back(-f[istatus]*f[i]);
+                gf.push_back(-c_exp*f[istatus]*f[i]);
             }
         }
         

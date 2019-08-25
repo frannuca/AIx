@@ -40,6 +40,7 @@ set(SOURCES		 convolution.cpp
 			ffnn_rsprop.cpp	
 			lstm.cpp	
 			softmax.cpp
+			loss.cpp
 			${HEADERS})
 		add_library(AIx ${SOURCES})
 		target_link_libraries(AIx ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})

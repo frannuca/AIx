@@ -6,6 +6,7 @@
 #include <armadillo>
 #include "inetwork.hpp"
 #include "ffnn.hpp"
+#include "loss.hpp"
 
 namespace AIX{
     namespace MLP{
@@ -27,6 +28,7 @@ namespace AIX{
         FFNNBuilder& withSoftmaxOutputLayer(size_t ncells);
         FFNNBuilder& withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> loss,
                                        std::function<arma::vec(const arma::vec&, const arma::vec&)>grad_loss);
+        FFNNBuilder& withLossFunctions(const AIX::LossFunction* floss);
         std::unique_ptr<INetwork> Build();                        
    };
 }

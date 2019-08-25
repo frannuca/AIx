@@ -11,6 +11,7 @@
 #include "activations.hpp"
 #include "mlp/layer.hpp"
 #include "xor.hpp"
+#include "loss.hpp"
 
 using namespace AIX;
 using namespace AIX::MLP;
@@ -23,10 +24,7 @@ int main(int argc, char** argv )
     std::shared_ptr<IActivation> relu(new ReLU(0.01,1.0));
     std::shared_ptr<IActivation> hyptan(new HyperbolicTangent(1.0));
     std::shared_ptr<IActivation> fact = relu;
-    auto floss = [](const arma::vec& x, const arma::vec& y){
-                auto d = arma::sum((x-y)*(x-y));
-                return d*0.5;
-    };
+    AIX::LeastSquaresLoss floss;
     
     auto dfloss = [](const arma::vec& x, const arma::vec& y){return (x-y);};
     FFNN_RSPROP_Params newtonparams(0.8,0.001,1.2,0.5,0.01);
@@ -36,7 +34,7 @@ int main(int argc, char** argv )
     std::unique_ptr<INetwork> ffnn = net.withInputLayer(2)
                                         .withHiddenLayer(number_of_cells,hyptan)                                        
                                         .withOutputLayer(1,sigmoid)
-                                        .withLossFunctions(floss,dfloss)
+                                        .withLossFunctions(&floss)
                                         .Build();
                 
     //data set:

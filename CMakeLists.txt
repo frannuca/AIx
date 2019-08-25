@@ -12,6 +12,7 @@ set(HEADERS
             ${INCLUDE_PATH}/activations.hpp                        
             ${INCLUDE_PATH}/constants.hpp            
             ${INCLUDE_PATH}/crossentropylayer.hpp
+            ${INCLUDE_PATH}/loss.hpp
 
             ${INCLUDE_PATH}/cnn/preprocessing.hpp 
             ${INCLUDE_PATH}/cnn/pooling.hpp
