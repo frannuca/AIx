@@ -12,6 +12,8 @@ namespace AIX{namespace MLP{
             _Ws_before = _Ws;
             _error[0] = std::numeric_limits<double>::infinity();
             _error[1] = std::numeric_limits<double>::infinity();
+
+            _dWs_best.push_back(std::vector<arma::mat>());
         }
     }
     
@@ -19,18 +21,18 @@ namespace AIX{namespace MLP{
     _lrplus(lrplus),_lrminus(lrminus),_maxlr(maxlr),_minlr(minlr),_lr0(initial_lr) {}
 
     void FFNN_RSPROP::backward() const{        
-        //std::cout<<"DLOSS"<<std::endl<<*_dloss<<std::endl;
-        //std::cout<<"OutputDerivatives"<<std::endl<<_layers[_layers.size()-1]->derivatives()<<std::endl;
-        //std::cout<<"Outputs"<<std::endl<<_layers[_layers.size()-1]->getOutputs()<<std::endl;
-        arma::mat delta = (*_dloss) % _layers[_layers.size()-1]->derivatives();
-
+        // std::cout<<"DLOSS"<<std::endl<<*_dloss<<std::endl;
+        // std::cout<<"OutputDerivatives"<<std::endl<<_layers[_layers.size()-1]->derivatives()<<std::endl;
+        // std::cout<<"Outputs"<<std::endl<<_layers[_layers.size()-1]->getOutputs()<<std::endl;
+        arma::mat delta = _dloss % _layers[_layers.size()-1]->derivatives();
+        //std::cout<<"d"<<std::endl<<delta<<std::endl;
         for(int i=_layers.size()-1;i>=0;--i){         
                 arma::vec x;   
                 if(i>0){
                     x = _layers[i-1]->getOutputs(true);
                 }
                 else{
-                    x=_input_1.get();
+                    x=_input_1;
                 }
                 //std::cout<<"o[layer("<<i<<")]"<<std::endl<<x<<std::endl;
                 arma::mat dW = delta * x.t();

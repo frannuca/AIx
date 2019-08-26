@@ -1,4 +1,5 @@
 #include "loss.hpp"
+#include <math.h>
 
 namespace AIX{
 
@@ -21,11 +22,18 @@ namespace AIX{
             
     }
 
+    
     arma::vec CrossEntropyLoss::derivative(const arma::vec& x, const arma::vec& y) const{
-            arma::vec l(x.size());
-            for(int i=0;i<x.size();++i){                
-                l(i)=-y(i)/(x(i));                                
+            arma::vec l(x.size(),arma::fill::zeros);
+            int iclass = -1;
+            for(int i=0;i<y.size();++i){
+                if(y(i)==1){
+                    iclass = i;
+                    break;
+                }
             }
+            
+            l(iclass) = -y(iclass)/(x(iclass));               
         
          return l;
         

@@ -6,7 +6,7 @@ namespace AIX{namespace MLP{
     }
     
     void FFNN_NEWTON::backward() const{        
-        arma::mat delta = (*_dloss) % _layers[_layers.size()-1]->derivatives();
+        arma::mat delta = _dloss % _layers[_layers.size()-1]->derivatives();
 
         for(int i=_layers.size()-1;i>=0;--i){         
                 arma::vec x;   
@@ -14,7 +14,7 @@ namespace AIX{namespace MLP{
                     x = _layers[i-1]->getOutputs(true);
                 }
                 else{
-                    x=_input_1.get();
+                    x=_input_1;
                 }
                 arma::mat dW = delta * x.t();
                 _dWs_accum[i] += dW;

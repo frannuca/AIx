@@ -30,11 +30,11 @@ set(CTEST_BINARY_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 
 
 #file(GLOB files "test_*.cc")
-set(TEST_FILES  #test_queue.cpp 
-				#test_convolute.cpp 
-				#test_opencv.cpp
-				#test_ffnn_newtonraphson.cpp
-				#test_ffnn_rsprop.cpp
+set(TEST_FILES  test_queue.cpp 
+				test_convolute.cpp 
+				test_opencv.cpp
+				test_ffnn_newtonraphson.cpp
+				test_ffnn_rsprop.cpp
 				test_softmax.cpp
 				) 
 

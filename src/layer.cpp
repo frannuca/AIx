@@ -16,10 +16,15 @@ namespace AIX{namespace MLP{
 
     arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W,const arma::vec* dummy){
         auto& wn = W.submat(0,0,arma::SizeMat(W.n_rows,x.size()));
+        
         auto a1 = wn * x;
         auto& b1 = W.col(x.size());
         auto c = a1 + b1;
 
+        // std::cout<<"W"<<std::endl<<W<<std::endl;
+        // std::cout<<"B"<<std::endl<<b1<<std::endl;
+        // std::cout<<"wx"<<std::endl<<a1<<std::endl;
+        // std::cout<<"wx+b"<<std::endl<<c<<std::endl;
         auto s = arma::conv_to<std::vector<double>>::from( 
                             c
                             );              

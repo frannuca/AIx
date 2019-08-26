@@ -85,7 +85,7 @@ namespace AIX{namespace MLP{
                 w= arma::randu(arma::SizeMat(_layers[i]->size(),_layers[i-1]->size()+1))*std::sqrt(scalingfactor/(_layers[i]->size()+_layers[i-1]->size()));
                 
             }           
-            w.col(w.n_cols-1) = arma::vec(w.n_rows)*0.0;
+            w.col(w.n_cols-1) = arma::vec(w.n_rows,arma::fill::zeros);
             _dWs_accum.push_back(arma::mat(w.n_rows,w.n_cols,arma::fill::zeros));
             _Ws.push_back(std::move(w));            
         }

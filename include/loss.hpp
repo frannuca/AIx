@@ -23,7 +23,7 @@ namespace AIX{
         public:
         virtual double loss(const arma::vec& xin, const arma::vec& target) const override;
         virtual arma::vec derivative(const arma::vec& xin, const arma::vec& target) const override;
-        virtual ~CrossEntropyLoss() override {};
+        virtual ~CrossEntropyLoss() override {};       
 
     };
 }

@@ -14,6 +14,7 @@ namespace AIX{
     class FFNN_RSPROP: public FFNN{
         private:
         mutable std::vector<std::vector<arma::mat>> _dWs;
+        mutable std::vector<std::vector<arma::mat>> _dWs_best;
         mutable std::vector<arma::mat> _Ws_before;
         mutable std::vector<arma::mat> _lr;
         mutable double  _error[2];

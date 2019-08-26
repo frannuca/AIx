@@ -20,9 +20,12 @@ namespace AIX{
         auto a1 = wn * x;
         auto& b1 = W.col(x.size());
         auto c = a1 + b1;
+        double maxs = arma::max(c);
+        inputs = (c-maxs);
         
-        inputs = c;
-        auto& s = inputs;
+        auto s = *inputs;
+        double smax = arma::max(s);
+        s = s - smax;
 
         int i=0;
         int istatus=-1;
@@ -34,7 +37,7 @@ namespace AIX{
                     istatus = i;
                 }
             }
-            cell.compute((*s)(i++));
+            cell.compute(s(i++));
             double out,dout;
             std::tie(out,dout) = cell.getData();
             total += out;

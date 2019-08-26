@@ -19,11 +19,11 @@ namespace AIX{
             mutable std::vector<arma::mat> _Ws;
             mutable std::vector<arma::mat> _dWs_accum;
             size_t _number_inputs;
-            mutable boost::optional<double> _loss;
-            mutable boost::optional<arma::vec> _dloss;
-            mutable boost::optional<arma::vec> _input;
-            mutable boost::optional<arma::vec> _input_1;
-            mutable boost::optional<arma::vec> _output;            
+            mutable double _loss;
+            mutable arma::vec _dloss;
+            mutable arma::vec _input;
+            mutable arma::vec _input_1;
+            mutable arma::vec _output;            
             virtual void init(){};
             //friend class FFNNBuider;
         public:
@@ -38,6 +38,7 @@ namespace AIX{
             virtual void update(double totalerror) const  override = 0;
             arma::vec operator()(const arma::vec& x) const override;
             virtual double train(const TrainingSet& trainingset, size_t niter,double tol) const override; 
+            
             virtual ~FFNN();
     };
 
