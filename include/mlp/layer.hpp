@@ -15,16 +15,17 @@ namespace AIX{
             bool isactivation_relu;            
             size_t Ncells;
             std::vector<Cell> _cells;
-            boost::optional<arma::vec> inputs;
-            boost::optional<arma::vec> outputs;
-            boost::optional<arma::vec> outputs_1;
-            boost::optional<arma::vec> doutputs;
+            arma::vec inputs;
+            arma::vec outputs;
+            arma::vec outputs_1;
+            arma::vec doutputs;
             
         public:
             Layer() = delete;
             Layer(size_t number_of_cells,std::shared_ptr<IActivation> ptract);
             virtual ~Layer(){};
 
+            virtual arma::vec operator()(const arma::vec& x,const arma::mat& W) const;
             virtual arma::vec forward(const arma::vec& x, const arma::mat& W,const arma::vec* out = nullptr );
             virtual arma::vec derivatives();
             virtual const arma::vec& getOutputs(bool extended = false);

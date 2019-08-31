@@ -10,9 +10,9 @@
 namespace AIX{
     namespace MLP{
     class FFNN_NEWTON: public FFNN{
-        private:
-        double lr;
+        
         public:
+        const double lr;
         explicit FFNN_NEWTON(double learning_rate);
         virtual void backward() const override;
         virtual void update(double totalerror) const override;

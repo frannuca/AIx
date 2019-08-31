@@ -27,14 +27,15 @@ int main(int argc, char** argv )
 
 
     AIX::CrossEntropyLoss floss2;
-    FFNN_RSPROP_Params rsparam(0.2,0.001,1.2,0.5,0.05);
-    FFNN_Newton_Raphson_Params newtonparams(0.2);
+    //AIX::LeastSquaresLoss floss2;
+    FFNN_RSPROP_Params rsparam(0.9,0.001,1.2,0.5,0.01);
+    FFNN_Newton_Raphson_Params newtonparams(0.2,0.2);
     
     FFNNBuilder net(FFNN_TYPES::RSPROP,&rsparam);
     
     std::unique_ptr<INetwork> ffnn = net.withInputLayer(2)
                                         .withHiddenLayer(number_of_cells,hyper)                                        
-                                        //.withHiddenLayer(number_of_cells,sigmoid)                                        
+                                        //.withOutputLayer(4,sigmoid)                                        
                                         .withSoftmaxOutputLayer(4)
                                         .withLossFunctions(&floss2)
                                         .Build();
@@ -43,7 +44,7 @@ int main(int argc, char** argv )
     
     TrainingSet tset = XORDS::GetXORSoftmaxSet();
     
-    ffnn->train(tset,100,0.01);
+    ffnn->train(tset,1000,0.0);
     for(auto& sample:tset){
         std::cout<<((arma::mat)sample.input).t()<<"->"<<std::endl<<arma::mat((*ffnn)(sample.input)).t()<<std::endl<<((arma::mat)sample.output).t()
         <<std::endl<<"-----------------"<<std::endl;

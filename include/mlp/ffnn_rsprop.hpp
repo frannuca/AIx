@@ -13,18 +13,20 @@ namespace AIX{
     namespace MLP{
     class FFNN_RSPROP: public FFNN{
         private:
-        mutable std::vector<std::vector<arma::mat>> _dWs;
-        mutable std::vector<std::vector<arma::mat>> _dWs_best;
+        mutable std::vector<std::vector<arma::mat>> _dWs;        
         mutable std::vector<arma::mat> _Ws_before;
+        mutable bool _bestError;
         mutable std::vector<arma::mat> _lr;
         mutable double  _error[2];
+        
+
+        public:
         const double _lrplus;
         const double _lrminus;
         const double _maxlr;
         const double _minlr;
         const double _lr0;
 
-        public:
         FFNN_RSPROP()=delete;
         FFNN_RSPROP(double lrplus,double lrminus,double maxlr, double minlr,double initial_lr);
         virtual void backward() const override;

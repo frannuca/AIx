@@ -10,14 +10,14 @@ namespace AIX{
     class Cell{                                
         private:      
             std::shared_ptr<IActivation> ptr;      
-            boost::optional<double> _fx;
-            boost::optional<double> _dfx;
+            double _fx;
+            double _dfx;
                         
         public:
             
             Cell()=delete;
             explicit Cell(std::shared_ptr<IActivation> ptr);
-
+            double operator()(const double& x);
             void compute(const double& x);
             std::tuple<double,double> getData();
     };

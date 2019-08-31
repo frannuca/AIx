@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <utility>
 #include <type_traits>
+#include "utils.hpp"
 
 namespace AIX{namespace MLP{
 
@@ -14,25 +15,26 @@ namespace AIX{namespace MLP{
         return Ncells;
     }
 
-    arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W,const arma::vec* dummy){
-        auto& wn = W.submat(0,0,arma::SizeMat(W.n_rows,x.size()));
-        
-        auto a1 = wn * x;
-        auto& b1 = W.col(x.size());
-        auto c = a1 + b1;
+    arma::vec Layer::operator()(const arma::vec& x,const arma::mat& W) const{
+        arma::vec y(_cells.size());
+        arma::vec t = W * extendvector(x);
+        int i=0;
+        for(auto cell:_cells){
+            y(i)=cell(t(i));
+            ++i;
+        }
 
-        // std::cout<<"W"<<std::endl<<W<<std::endl;
-        // std::cout<<"B"<<std::endl<<b1<<std::endl;
-        // std::cout<<"wx"<<std::endl<<a1<<std::endl;
-        // std::cout<<"wx+b"<<std::endl<<c<<std::endl;
-        auto s = arma::conv_to<std::vector<double>>::from( 
-                            c
-                            );              
-        inputs = s;
+        return y;
+    }
+
+    arma::vec  Layer::forward(const arma::vec& x, const arma::mat& W,const arma::vec* dummy){
+        inputs = x;
+        arma::vec t = (W* extendvector(x));
+      
         int i=0;
         std::vector<double> gf,f;
         for(auto cell:_cells){
-            cell.compute(s[i++]);
+            cell.compute(t(i++));
             double out,dout;
             std::tie(out,dout) = cell.getData();
             f.push_back(out);
@@ -40,29 +42,28 @@ namespace AIX{namespace MLP{
         }
 
         outputs = arma::vec(f);
-        doutputs = arma::vec(gf);
-        f.push_back(1.0);
-        outputs_1 = arma::vec(f);
+        doutputs = arma::vec(gf);       
+        outputs_1 = extendvector(outputs);
         
-        return outputs.get();
+        return outputs;
     }
 
     const arma::vec& Layer::getOutputs(bool extended){
         if(!extended){
-            return outputs.get();
+            return outputs;
         }
         else{
-            return outputs_1.get();
+            return outputs_1;
         }
         
     }
 
     const arma::vec& Layer::getInputs(){
-        return inputs.get();
+        return inputs;
     }
 
     arma::vec Layer::derivatives(){        
-        return doutputs.get();
+        return doutputs;
     }
 
     bool Layer::isActivationReLU() const{

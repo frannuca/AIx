@@ -16,9 +16,10 @@ namespace AIX{
     double CrossEntropyLoss::loss(const arma::vec& x, const arma::vec& y) const{
             double l=0;
             for(int i=0;i<x.size();++i){                
-                l += y(i)*std::log(x(i));                                
+                if(y(i)== 1)
+                    return -std::log(x(i));                                
             }            
-            return -l;
+            throw "invalid class";
             
     }
 
@@ -33,7 +34,7 @@ namespace AIX{
                 }
             }
             
-            l(iclass) = -y(iclass)/(x(iclass));               
+             for(int i=0;i<y.size();++i) l(i) = -y(iclass)/(x(iclass));               
         
          return l;
         

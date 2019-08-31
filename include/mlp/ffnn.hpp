@@ -12,6 +12,7 @@ namespace AIX{
  class FFNNBuilder;
  class FFNN: public INetwork{
         public:
+            mutable std::vector<arma::mat> _Ws_best;
             std::vector<std::unique_ptr<Layer>> _layers;
             std::unique_ptr<Layer> _outputLayer;
             std::function<double(const arma::vec&,const arma::vec&)> _floss;

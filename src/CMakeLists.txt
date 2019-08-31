@@ -24,7 +24,8 @@ include_directories(${CMAKE_SOURCE_DIR}/include/)
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
 
-set(SOURCES		 convolution.cpp  
+set(SOURCES	utils.cpp	 
+			convolution.cpp  
 			custom_exceptions.cpp  
 			cnn.cpp 
 			pooling.cpp 

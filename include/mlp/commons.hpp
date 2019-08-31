@@ -5,30 +5,32 @@
 #include <vector>
 #include <utility>
 namespace AIX{
+
     namespace MLP{
-    
-    
+        
     struct TrainingSample{
         arma::mat input;
         arma::mat output;
     };
 
-    typedef std::vector<TrainingSample> TrainingSet;
-    
+    typedef std::vector<TrainingSample> TrainingSet;    
 
     class FFNN_Params_Base{  
         public:      
         virtual ~FFNN_Params_Base(){};
     };
-    class FFNN_Newton_Raphson_Params:public FFNN_Params_Base{  
+
+    class FFNN_Newton_Raphson_Params:public FFNN_Params_Base{             
         public:
         FFNN_Newton_Raphson_Params()=delete;
-        FFNN_Newton_Raphson_Params(double lr):learning_rate(lr){};
-        double learning_rate;
-        double momentum;      
-        virtual ~FFNN_Newton_Raphson_Params(){};
-        
+        FFNN_Newton_Raphson_Params(const double &lr,const double &momentum_):learning_rate(lr),momentum(momentum_){};
+
+        const double learning_rate;
+        const double momentum;
+ 
+        virtual ~FFNN_Newton_Raphson_Params()  {};        
     };
+
     class FFNN_RSPROP_Params: public FFNN_Params_Base{
         public:
         FFNN_RSPROP_Params()=delete;
@@ -39,7 +41,7 @@ namespace AIX{
         double learning_rate_increment;
         double learning_rate_decrement;
         double initial_learning_rate;
-        virtual ~FFNN_RSPROP_Params(){};
+        virtual ~FFNN_RSPROP_Params() override{};
     };
 }
 }

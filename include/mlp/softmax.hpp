@@ -12,7 +12,7 @@ namespace AIX{
         Softmax() = delete;
         Softmax(size_t number_of_classes_);
         arma::vec forward(const arma::vec& x, const arma::mat& W,const arma::vec* out) override;
-        
+        virtual arma::vec operator()(const arma::vec& x,const arma::mat& W) const override;
     };
   }
     

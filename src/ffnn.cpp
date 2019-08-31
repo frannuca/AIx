@@ -1,10 +1,26 @@
 #include "mlp/ffnn.hpp"
 #include "concurrency/scheduler.hpp"
+#include "utils.hpp"
+namespace{
+bool checknan(const arma::mat& a){
+            double x = arma::accu(a);
+            
+            return x!=x;
+};
 
+bool checknan(const arma::vec& a){
+            double x = arma::sum(a);
+            return x!=x;
+};
+
+bool checknan(const std::vector<double>& gf){
+    double x = std::accumulate(gf.begin(),gf.end(),0.0);
+    return x != x;
+}
+}
 namespace AIX{namespace MLP{
 
-
-    #pragma region // Implementation of FFNN methods
+   
     FFNN::FFNN(){ 
 
     }
@@ -29,29 +45,23 @@ namespace AIX{namespace MLP{
     }
     
     double FFNN::forward(const arma::vec& xin, const arma::vec& y) const {
-        // std::cout<<"x="<<std::endl<<xin<<std::endl;
-        // std::cout<<"y="<<std::endl<<y<<std::endl;
-
+        
         arma::vec x=xin;
         _input=xin;
-        std::vector<double> auxin = arma::conv_to<std::vector<double>>::from(xin);
-        auxin.push_back(1);
-        _input_1 = arma::vec(auxin);
+        _input_1 = extendvector(xin);
         _output = y;
-
+                
         for(size_t i=0;i <_layers.size();++i){
-            x = _layers[i]->forward(x,_Ws[i],&y);
-            //std::cout<<"x["<<i<<"]="<<std::endl<<x<<std::endl;
+            x = _layers[i]->forward(x,_Ws[i],&y);            
         } 
 
         
         //compute loss:
          _loss = _floss(x,y);
-        //std::cout<<x.t()<<std::endl<<y.t()<<std::endl;
+         
+        //compute derivative of the loss
         _dloss = _dfloss(x,y);
-
-        //std::cout<<"loss="<<std::endl<<_loss<<std::endl;
-        //std::cout<<"dloss="<<std::endl<<_dloss<<std::endl;
+               
         return _loss;
         
     }
@@ -59,7 +69,7 @@ namespace AIX{namespace MLP{
     arma::vec FFNN::operator()(const arma::vec& x) const{       
         arma::vec s = x;
         for(size_t i=0;i <_layers.size();++i){
-            s = _layers[i]->forward(s,_Ws[i],nullptr);
+            s = (*_layers[i])(s,_Ws[i]);
         } 
         return s;
     }
@@ -78,11 +88,7 @@ namespace AIX{namespace MLP{
         std::shuffle(rindex.begin(),rindex.end(),gen);
 
         for(size_t n=0;n<niter;++n){
-           totalerr=0; 
-            
-        
-            
-
+           totalerr=0;             
             for(auto& idx:rindex){  
 
                 auto& x = trainingset[idx];
@@ -99,7 +105,9 @@ namespace AIX{namespace MLP{
         if(totalerr < tol){
             break;
         }             
-        }        
+        }
+
+        _Ws = _Ws_best;        
         return totalerr;
     }
 }}
