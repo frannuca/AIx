@@ -16,8 +16,8 @@ namespace AIX{namespace MLP{
     }
 
     arma::vec Layer::operator()(const arma::vec& x,const arma::mat& W) const{
-        arma::vec y(_cells.size());
-        arma::vec t = W * extendvector(x);
+        arma::vec y(_cells.size());          
+        arma::vec t = (W* extendvector(x));
         int i=0;
         for(auto cell:_cells){
             y(i)=cell(t(i));

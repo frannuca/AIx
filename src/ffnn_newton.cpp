@@ -31,6 +31,8 @@ namespace AIX{namespace MLP{
     }
 
     void FFNN_NEWTON::update(double totalerror) const{
+        checkforbest(totalerror);
+        
         for(int i=_layers.size()-1;i>=0;--i){ 
          _Ws[i] += -lr*_dWs_accum[i];
          _dWs_accum[i] *= 0.0;

@@ -110,4 +110,13 @@ namespace AIX{namespace MLP{
         _Ws = _Ws_best;        
         return totalerr;
     }
+
+    void FFNN::checkforbest(const double& totalerror) const{
+        if(_bestError>=totalerror){
+                _bestError = totalerror;
+                _Ws_best.clear();
+
+                for(auto xW:_Ws) _Ws_best.push_back(xW);
+            }
+    }
 }}

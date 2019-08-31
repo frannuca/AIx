@@ -15,7 +15,6 @@ namespace AIX{
         private:
         mutable std::vector<std::vector<arma::mat>> _dWs;        
         mutable std::vector<arma::mat> _Ws_before;
-        mutable bool _bestError;
         mutable std::vector<arma::mat> _lr;
         mutable double  _error[2];
         

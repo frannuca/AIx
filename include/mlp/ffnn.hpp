@@ -9,10 +9,10 @@
 namespace AIX{
     namespace MLP{
         
- class FFNNBuilder;
- class FFNN: public INetwork{
-        public:
+ 
+ struct FFNN: public INetwork{        
             mutable std::vector<arma::mat> _Ws_best;
+            mutable bool _bestError;
             std::vector<std::unique_ptr<Layer>> _layers;
             std::unique_ptr<Layer> _outputLayer;
             std::function<double(const arma::vec&,const arma::vec&)> _floss;
@@ -26,8 +26,8 @@ namespace AIX{
             mutable arma::vec _input_1;
             mutable arma::vec _output;            
             virtual void init(){};
-            //friend class FFNNBuider;
-        public:
+            void checkforbest(const double &totalerror) const;
+                   
             FFNN();
             void withInputLayer(size_t number_of_inputs);
             void withHiddenLayer(std::unique_ptr<Layer>);
@@ -41,8 +41,8 @@ namespace AIX{
             virtual double train(const TrainingSet& trainingset, size_t niter,double tol) const override; 
             
             virtual ~FFNN();
+            
     };
-
 
 }
 }

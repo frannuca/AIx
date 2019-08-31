@@ -65,12 +65,8 @@ namespace AIX{namespace MLP{
     }
 
     void FFNN_RSPROP::update(double totalerror) const{
-            if(_bestError>=totalerror){
-                _bestError = totalerror;
-                _Ws_best.clear();
-
-                for(auto xW:_Ws) _Ws_best.push_back(xW);
-            }
+            
+            checkforbest(totalerror);
 
             if(totalerror != totalerror){
                 _Ws.clear();
