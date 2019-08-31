@@ -22,8 +22,8 @@ int main(int argc, char** argv )
     std::shared_ptr<IActivation> fact = sigmoid;
     AIX::LeastSquaresLoss floss;
     
-    auto dfloss = [](const arma::vec& x, const arma::vec& y){return (x-y);};
-    FFNN_Newton_Raphson_Params newtonparams(0.33);
+    auto dfloss = [](const arma::vec& x, const arma::vec& y){return (x-y);}; 
+    FFNN_Newton_Raphson_Params newtonparams(0.33,0.0);
     
     FFNNBuilder net(FFNN_TYPES::NEWTON_RAPHSON,&newtonparams);
     
