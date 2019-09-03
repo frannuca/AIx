@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 #include <armadillo>
-#include "cnn/preprocessing.hpp"
+#include "preprocessor/preprocessing.hpp"
 
 using namespace cv;
 using namespace AIX;

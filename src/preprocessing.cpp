@@ -1,4 +1,4 @@
-#include "cnn/preprocessing.hpp"
+#include "preprocessor/preprocessing.hpp"
 
 namespace AIX{namespace CNN{
     
@@ -42,7 +42,7 @@ namespace AIX{namespace CNN{
                 int w = sz.width;
 
                 cv::Mat grey;
-                cv::cvtColor(*image, grey, CV_RGB2GRAY);
+                cv::cvtColor(*image, grey, cv::COLOR_RGB2GRAY);
                 arma::mat* dest= new arma::mat(h,w);
                 
                 for(int i=0;i<h;++i){

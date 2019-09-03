@@ -8,14 +8,15 @@ set(HEADERS
             
             ${INCLUDE_PATH}/custom_exceptions.hpp
 
+            ${INCLUDE_PATH}/preprocessor/preprocessing.hpp 
+
             
             ${INCLUDE_PATH}/activations.hpp                        
             ${INCLUDE_PATH}/constants.hpp            
             ${INCLUDE_PATH}/crossentropylayer.hpp
             ${INCLUDE_PATH}/loss.hpp
             ${INCLUDE_PATH}/utils.hpp
-
-            ${INCLUDE_PATH}/cnn/preprocessing.hpp 
+            
             ${INCLUDE_PATH}/cnn/pooling.hpp
             ${INCLUDE_PATH}/cnn/convolution.hpp
             ${INCLUDE_PATH}/cnn/cnn.hpp
