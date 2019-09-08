@@ -80,33 +80,29 @@ namespace AIX{namespace MLP{
     double FFNN::train(const TrainingSet& trainingset, size_t niter,double tol) const{
                 
 
-        double totalerr=0;
+        double totalerr=std::numeric_limits<double>::max();
         
         std::mt19937 gen(42);
         std::vector<int> rindex(trainingset.size());
         std::generate(rindex.begin(),rindex.end(),[n=0]() mutable{return n++;});
-        std::shuffle(rindex.begin(),rindex.end(),gen);
+        
 
-        for(size_t n=0;n<niter;++n){
-           totalerr=0;             
-            for(auto& idx:rindex){  
+        int counter=niter;
+        while(niter-- && totalerr > tol){
+                totalerr = 0.0;
+                std::shuffle(rindex.begin(),rindex.end(),gen);
+         
+                std::for_each(rindex.begin(),rindex.end(),
+                                [&](const int& n){
+                                        auto &x = trainingset[n];
+                                        totalerr += forward(x.input.col(0),x.output.col(0));
+                                        backward();
+                                });
 
-                auto& x = trainingset[idx];
-                totalerr += forward(x.input.col(0),x.output.col(0));
-                backward();
-                
-            };
-
-            update(totalerr);
-                                                  
-            
-        std::cout<<"Iteration "<<n<<" Error="<<totalerr<<std::endl;   
-       
-        if(totalerr < tol){
-            break;
-        }             
+                update(totalerr);
+                std::cout<<"Iteration "<<niter<<" Error="<<totalerr<<std::endl;   
         }
-
+                                                                                         
         _Ws = _Ws_best;        
         return totalerr;
     }

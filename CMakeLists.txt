@@ -35,6 +35,10 @@ set(HEADERS
             
             ${INCLUDE_PATH}/nlp/nlpprocessor.hpp            
             ${INCLUDE_PATH}/rnn/lstm.hpp
+
+            ${INCLUDE_PATH}/data/heterogeneouscontainter.hpp
+            ${INCLUDE_PATH}/data/series.hpp
+            ${INCLUDE_PATH}/data/frame.hpp            
             )
 
 enable_testing()
