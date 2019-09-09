@@ -39,6 +39,7 @@ set(HEADERS
             ${INCLUDE_PATH}/data/heterogeneouscontainter.hpp
             ${INCLUDE_PATH}/data/series.hpp
             ${INCLUDE_PATH}/data/frame.hpp            
+            ${INCLUDE_PATH}/data/axis.hpp            
             )
 
 enable_testing()

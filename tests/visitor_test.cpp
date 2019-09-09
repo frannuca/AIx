@@ -28,15 +28,28 @@ int main() {
     v.push(a);
     v.push(b);
     v.push(c);
+    
+    
+    AIX::Data::Series<int,double> sa ({500,200,300,400,100},{1500.0,1200.0,1300.0,1400.0,1100.0});
+    AIX::Data::Series<int,double> sb ({500,200,300,400,100},{1500.0,1200.0,1300.0,1400.0,1100.0});
 
-    AIX::Data::Series<int,double> s ({std::make_pair(1,1.0),std::make_pair(2,2.0),std::make_pair(3,3.0),std::make_pair(4,4.5)});
-    AIX::Data::Series<int,double> s2 ({500,200,300,400,100},{1500.0,1200.0,1300.0,1400.0,1100.0});
-    s2.sort();
-    for(auto& p:s2){
-        auto a = s2[p];
-        std::cout<<p<<"->"<<s2[p]<<std::endl;
+    sb.sort();
+    auto sab = sa + sb;
+    
+    std::cout<<"sa[] "<<300<<"]="<<sa[300]<<std::endl; 
+    std::cout<<"sb[] "<<100<<"]="<<sb[100]<<std::endl; 
+    std::cout<<"sab[] "<<500<<"]="<<sab[500]<<std::endl; 
+    for(auto& p:sa){
+        auto& a = p.x();
+        std::cout<<"sa["<<p.x()<<"]="<<*p<<std::endl;
     }    
     
+    std::cout<<"sorting the series ascending..."<<std::endl;
+    sa.sort(false);
+    for(auto& p:sb){        
+        std::cout<<"sb["<<p.x()<<"]="<<*p<<std::endl;
+    }    
+            
     
 }
 

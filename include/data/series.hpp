@@ -11,31 +11,35 @@
 #include <memory>
 #include <iterator>
 #include <assert.h>
+#include <set>
+#include "axis.hpp"
+#include <exception>
 
 namespace AIX{namespace Data{
 
-    template<class K, class V>
-    class Series_Iterator;
-
-    template<class K, class V>
-    class Series_rev_Iterator;
-
     
-
+    /** Key Value containiner type.
+     * 
+     * Series of key and values sorted ascendent/descendent with extenden mathematical operations: +, -, *, /, scalar sum, scala mult, map, filter etc...
+     */
     template<typename K, typename V>
     class Series{
         public:
-        using Container = std::vector<std::pair<K,V>>;   
-        using const_iterator = Series_Iterator<K,V>;
-        using const_reverse_iterator = Series_rev_Iterator<K,V>;
+        
+        using TAxis = Axis<K,V>;
+        using Container = std::vector<TAxis>;   
+        using const_iterator =  typename Container::const_iterator;
+        using iterator = typename  Container::iterator;
 
-        Series(const std::vector<K>& keys,const std::vector<V>& values);                        
-        Series(std::vector<std::pair<K,V>>&& keyvalues);
-
+        Series(const std::vector<K>& keys,const std::vector<V>& values);                                
+        Series(std::vector<Axis<K,V>> && s):_data(std::forward<TAxis>(s)){};
+        Series(const std::vector<Axis<K,V>> & s):_data(s){};
+        
         Series(const Series<K,V>& that);
         Series(Series<K,V>&& that);
 
         Series<K,V>& operator=(const Series<K,V>& that);
+        Series<K,V>& operator=(const Axis<K,V>& axis);
         Series<K,V>& operator=(Series<K,V>&& that);
 
         void sort(bool descendentorder=true);
@@ -43,13 +47,13 @@ namespace AIX{namespace Data{
         V operator[](const K& i) const;
         std::vector<K> Keys() const;
         
-        const_iterator begin(){return  Series_Iterator<K,V>(this,0);}
-        const_iterator end()  {return  Series_Iterator<K,V>(this,_data.size());}
-
-
-        const_reverse_iterator rbegin() const {return  Series_Iterator<K,V>(this,_data.size());}
-        const_reverse_iterator rend()  const {return  Series_Iterator<K,V>(this,0);}
-
+        iterator begin()  {return  _data.begin();}
+        iterator end()    {return  _data.end();}
+        
+        const_iterator begin() const  {return  _data.begin();}
+        const_iterator end()   const  {return  _data.end();}
+        
+        
         std::size_t size(){return _data.size();}
         
         template<class A, class B>
@@ -64,90 +68,16 @@ namespace AIX{namespace Data{
 
     };
 
-template<class K, class V>
-class Series_Iterator{
-        public:            
-            using value_type = K;
-            using pointer    = K*;
-            using reference  = K&;
-            using difference_type = std::ptrdiff_t;
-            using iterator_category = std::random_access_iterator_tag;
-            
-            Series_Iterator():                    v(nullptr), i(0) {}   
-            Series_Iterator(Series<K,V>* v, int i): v(v),       i(i) {}
-            Series_Iterator(const Series_Iterator<K,V>& that):i(that.i),v(that.v){}
-  
-
-            reference operator*()                 {return v->_data[i].first;}            
-            const reference operator*() const     {return v->_data[i].first;}
-            
-            Series_Iterator<K,V>& operator=(const Series_Iterator<K,V>& that){i = that.i;v = that.v;return *this;}            
-
-                    
-        
-            Series_Iterator<K,V>& operator++()        {++i;return *this;}
-            Series_Iterator<K,V>& operator--()        {--i;return *this;}
-            
-            Series_Iterator<K,V>& operator+(int n)    {i+=n;return *this;}
-            Series_Iterator<K,V>& operator-(int n)    {i-=n;return *this;}
-            
-            Series_Iterator<K,V>& operator+=(int n)    {i+=n;return *this;}
-            Series_Iterator<K,V>& operator-=(int n)    {i-=n;return *this;}
-            
-            reference operator[](const size_t& n)    {return v[n].first;}
-
-            // Note: comparing iterator from different containers
-            //       is undefined behavior so we don't need to check
-            //       if they are the same container.
-            virtual bool operator<(Series_Iterator<K,V> const& r)  const {return v->_data[i].first <  r.v->_data[r.i].first;}
-            virtual bool operator<=(Series_Iterator<K,V> const& r) const {return v->_data[i].first <= r.v->_data[r.i].first;}
-            virtual bool operator>(Series_Iterator<K,V> const& r)  const {return v->_data[i].first >  r.v->_data[r.i].first;}
-            virtual bool operator>=(Series_Iterator<K,V> const& r) const {return v->_data[i].first >= r.v->_data[r.i].first;}
-            bool operator!=(const Series_Iterator<K,V> &r) const {return v->_data[i].first != r.v->_data[r.i].first;}
-            bool operator==(const Series_Iterator<K,V> &r) const {return v->_data[i].first == r.v->_data[r.i].first;}
-
-            template<class A, class B>
-            friend Series_Iterator<A,B>& operator+(int n,Series_Iterator<A,V>&);
-
-            template<class A, class B>
-            friend Series_Iterator<A,B>& operator-(int n,Series_Iterator<A,V>&);
-
-            difference_type operator-(const Series_Iterator<K,V>& that){
-                return this->i-that.i;        
-            }
-
-        protected:
-            Series<K,V>* v;
-            int        i;
-        };
-
-    template<class K, class V>
-    Series_Iterator<K,V>& operator+(int n,Series_Iterator<K,V>& that){
-        that.i += n;
-        return *that;
-    }
-
-    template<class K, class V>
-    Series_Iterator<K,V>& operator-(int n,Series_Iterator<K,V>& that){
-        that.i -= n;
-        return *that;
-    }
-   
-   
    
     template<class K, class V>
     Series<K,V>::Series(const std::vector<K>& keys, const std::vector<V>& values){
-        assert(keys.size() == values.size());
-        
+        assert(keys.size() == values.size());            
         std::transform(keys.begin(),keys.end(),values.begin(),std::back_inserter(_data),
-                            [](const K& a,const V& b){return std::move(std::pair<K,V>(a,b));});           
+                            [](const K& a,const V& b){return TAxis{a,b};});           
     }
+    
 
     template<class K, class V>
-    Series<K,V>::Series(Series<K,V>::Container&& keyvalues):_data(std::forward<Series<K,V>::Container>(keyvalues)){}
-   
-
-     template<class K, class V>
     Series<K,V>::Series(const Series<K,V>& that){
         _data = that._data;
     }
@@ -164,6 +94,13 @@ class Series_Iterator{
     }
 
     template<class K, class V>
+    Series<K,V>& Series<K,V>::operator=(const Axis<K,V>& that){
+        _data = that;
+        return *this;
+    }
+
+
+    template<class K, class V>
     Series<K,V>& Series<K,V>::operator=(Series<K,V>&& that){
         _data = std::move(that._data);
         return *this;
@@ -172,44 +109,77 @@ class Series_Iterator{
     template<class K, class V>
     V& Series<K,V>::operator[](const K& i){
        
-       auto ilow = std::lower_bound(this->begin(),this->end(),i);
-       if(ilow == this->end()){
+       
+       auto ilow = std::lower_bound(begin(),end(),i);
+       if(ilow == end()){
            throw "Not found";
        }
-       int d = std::distance(this->begin(),ilow);
-       return _data[d].second;
+       
+       return ilow->y();
     }
 
     template<class K, class V>
     V Series<K,V>::operator[](const K& i) const{
-       return _data[i].second;
+        const_iterator p;
+       if(!sortedDescendent){
+           p = std::find(begin(),end(),i);
+       }
+       else{
+            const_iterator p1,p2;
+            std::tie(p1,p2)=std::equal_range(begin(),end(),i);    
+            if(p1->x() == i){
+                p = p1;
+            }
+            else if(p2->x() == i){
+                p=p2;
+            }
+            else{
+                p = end();
+            }
+       }
+        
+        if(p == end()){            
+            throw std::invalid_argument("Key not present in series container");
+        }
+       return **p;
     }
 
     template<class K, class V>
     std::vector<K> Series<K,V>::Keys() const{
         std::vector<K> keys;
-        std::transform(_data.begin(),_data.end(),std::back_inserter(keys),[](auto& a){return a.first();});
+        std::transform(_data.begin(),_data.end(),std::back_inserter(keys),[](auto& a){return a.x;});
         return keys;
     }
 
     template<class K, class V>
     void Series<K,V>::sort(bool descendentorder){
-        if(sortedDescendent && *sortedDescendent){
+        if(sortedDescendent && *sortedDescendent==descendentorder){
             return;
         }
 
         if(descendentorder){
-            std::sort(_data.begin(),_data.end(),[](auto& a, auto& b){return a<b;});
+            std::sort(begin(),end(),[](auto& a, auto& b){return a.x()<b.x();});
         }
         else{
-            std::sort(_data.begin(),_data.end(),[](auto& a, auto& b){return a>b;});
+            std::sort(begin(),end(),[](auto& a, auto& b){return a.x()>b.x();});
         }
         sortedDescendent= descendentorder;
     }
 
     template<class K, class V>
     Series<K,V> operator+(const Series<K,V>& a, const Series<K,V>& b){
-        std::vector<std::pair<K,V>> sum;
+        std::vector<Axis<K,V>> intersection,symdiff;
+        std::set_intersection(a.begin(),a.end(),b.begin(),b.end(),std::back_inserter(intersection));
+
+        std::vector<Axis<K,V>> sumr;    
+        for(auto p:intersection){
+            K k = (K)p;
+            V v = a[k]+b[k];
+            sumr.push_back(Axis<K,V>(k,v));
+        }
+
+        Series<K,V> r(sumr);
+        return r;
         
     }
 }
