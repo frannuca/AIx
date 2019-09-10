@@ -53,9 +53,9 @@ int main() {
 
     std::cout<<std::endl;
     std::cout<<"Summing series"<<std::endl;
-    Series<int,double> series_1p2 = series_1+series_2;
-    for(auto& k : series_1p2.Keys()){
-        double d = series_1p2[k] - series_1[k] - series_2[k];        
+    Series<int,double> series_1s2 = series_1+series_2;
+    for(auto& k : series_1s2.Keys()){
+        double d = series_1s2[k] - series_1[k] - series_2[k];        
         assert(std::abs(d)<1e-10);
     }
     
@@ -76,6 +76,26 @@ int main() {
         assert(std::abs(d)<1e-10);      
     }
     
+    std::cout<<std::endl;
+    std::cout<<"product series"<<std::endl;
+    auto series_1p2 = series_1 * series_2;
+    for(auto& k : series_1p2.Keys()){
+        double d = series_1p2[k] - series_1[k] * series_2[k];
+        assert(std::abs(d)<1e-10);      
+    }
+
+
+    std::cout<<std::endl;
+    std::cout<<"scalar product series"<<std::endl;
+    auto series_1scalar = series_1 * 3.0;
+    auto series_1scalarbis = 3.0 * series_1;
+    for(auto& k : series_1scalar.Keys()){
+        double d = series_1scalar[k] - series_1[k] * 3.0;
+        double d1 = series_1scalarbis[k] - series_1[k] * 3.0;
+        assert(std::abs(d)<1e-10);      
+        assert(std::abs(d1)<1e-10);      
+    }
+
     std::cout<<"operator[] with assign"<<std::endl;
     series_1[257]=33.3;
     assert(series_1[257]==33.3);

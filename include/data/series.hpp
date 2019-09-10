@@ -72,6 +72,15 @@ namespace AIX{namespace Data{
         template<class A, class B>
         friend  Series<A,B> operator-(const Series<A,B>& a, const Series<A,B>& b);
 
+        template<class A, class B>
+        friend  Series<A,B> operator*(const Series<A,B>& a, const Series<A,B>& b);
+        
+        template<class A, class B>
+        friend  Series<A,B> operator*(const B& l, const Series<A,B>& b);
+
+        template<class A, class B>
+        friend  Series<A,B> operator*(const Series<A,B>& b,const B& l);
+        
         template<class A, class B> 
         friend class Series_Iterator;
 
@@ -89,6 +98,40 @@ namespace AIX{namespace Data{
         }
         return m;
     }
+
+    template<class K, class V>
+    Series<K,V> operator*(const Series<K,V>& a, const Series<K,V>& b){
+        std::vector<K> ak = a.Keys();
+        std::vector<K> bk = b.Keys();
+        std::sort(ak.begin(),ak.end());
+        std::sort(bk.begin(),bk.end());
+        std::vector<K> intersection;
+        std::set_intersection(ak.begin(),ak.end(),bk.begin(),bk.end(),std::back_inserter(intersection));
+        std::vector<Axis<K,V>> prod;    
+        for(auto p:intersection){
+            K k = (K)p;
+            V v = a[k]*b[k];
+            prod.push_back(Axis<K,V>(k,v));
+        }
+
+        Series<K,V> r(prod);
+        return r;
+    }
+    
+    template<class K, class V>
+    Series<K,V> operator*(const V& l, const Series<K,V>& b){
+        Series<K,V> prd(b);
+        for(auto& x:prd){
+            *x *= l;
+        }
+        return prd;
+    }
+
+    template<class K, class V>
+    Series<K,V> operator*(const Series<K,V>& b,const V& l){
+        return l*b;
+    }
+    
 
     template<class K, class V>
     Series<K,V>::Series(const std::vector<K>& keys, const std::vector<V>& values){
