@@ -22,6 +22,7 @@ class Axis{
             bool operator==(const Axis& that) const;
             bool operator==(const K& that) const;
             const K& x() const;
+            
             V& y();
             V y() const;
             V& operator*();
@@ -34,6 +35,12 @@ class Axis{
 
             template<class A, class B>
             friend bool operator<(const A& k,const Axis<A,B>& op);
+
+            template<class A, class B>
+            friend bool operator>(const Axis<A,B>& op, const A& k);
+
+            template<class A, class B>
+            friend bool operator>(const A& k,const Axis<A,B>& op);
 
             private:
             K _x;
@@ -48,6 +55,15 @@ class Axis{
         template<class K, class V>
         bool operator<(const K& k,const Axis<K,V>& op){
             return op<k;
+        }
+
+        template<class K, class V>
+        bool operator>(const Axis<K,V>& op, const K& k){
+            return op._x>k; 
+            };
+        template<class K, class V>
+        bool operator>(const K& k,const Axis<K,V>& op){
+            return op>k;
         }
 
         template<class K, class V>
@@ -103,7 +119,7 @@ class Axis{
 
         template<class K, class V>
         const K& Axis<K,V>::x() const {return _x;};
-
+        
         template<class K, class V>
         V& Axis<K,V>::y(){return _y;}
 

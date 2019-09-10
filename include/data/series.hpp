@@ -30,6 +30,9 @@ namespace AIX{namespace Data{
         using Container = std::vector<TAxis>;   
         using const_iterator =  typename Container::const_iterator;
         using iterator = typename  Container::iterator;
+        using const_reverse_iterator =  typename Container::const_reverse_iterator;
+        using reverse_iterator = typename  Container::reverse_iterator;
+
 
         Series(const std::vector<K>& keys,const std::vector<V>& values);                                
         Series(std::vector<Axis<K,V>> && s):_data(std::forward<TAxis>(s)){};
@@ -53,6 +56,11 @@ namespace AIX{namespace Data{
         const_iterator begin() const  {return  _data.begin();}
         const_iterator end()   const  {return  _data.end();}
         
+        reverse_iterator rbegin()  {return  _data.rbegin();}
+        reverse_iterator rend()    {return  _data.rend();}
+        
+        const_reverse_iterator rbegin() const  {return  _data.rbegin();}
+        const_reverse_iterator rend()   const  {return  _data.rend();}
         
         std::size_t size(){return _data.size();}
         
@@ -110,23 +118,21 @@ namespace AIX{namespace Data{
     V& Series<K,V>::operator[](const K& i){
        
        
-       auto ilow = std::lower_bound(begin(),end(),i);
-       if(ilow == end()){
-           throw "Not found";
-       }
-       
-       return ilow->y();
-    }
-
-    template<class K, class V>
-    V Series<K,V>::operator[](const K& i) const{
-        const_iterator p;
-       if(!sortedDescendent){
+        if(!sortedDescendent){
+           iterator p;
            p = std::find(begin(),end(),i);
+           if(p == end()){            
+            std::ostringstream msg;
+            msg <<"Key:"<<i<<" not present in the series";
+            throw std::invalid_argument(msg.str());
+        }
+       return **p;
        }
-       else{
-            const_iterator p1,p2;
-            std::tie(p1,p2)=std::equal_range(begin(),end(),i);    
+
+       else if(*sortedDescendent){
+            iterator p;
+            iterator p1,p2;
+            std::tie(p1,p2) = std::equal_range(begin(),end(),i);    
             if(p1->x() == i){
                 p = p1;
             }
@@ -136,18 +142,100 @@ namespace AIX{namespace Data{
             else{
                 p = end();
             }
-       }
-        
-        if(p == end()){            
-            throw std::invalid_argument("Key not present in series container");
+            if(p == end()){            
+            std::ostringstream msg;
+            msg <<"Key:"<<i<<" not present in the series";
+            throw std::invalid_argument(msg.str());
         }
        return **p;
+       }
+       else{
+            reverse_iterator p;
+            reverse_iterator p1,p2;
+            std::tie(p1,p2) =  std::equal_range(rbegin(),rend(),i)  ;
+            if(p1->x() == i){
+                p = p1;
+            }
+            else if(p2->x() == i){
+                p=p2;
+            }
+            else{
+                p = rend();
+            }
+            if(p == rend()){            
+            std::ostringstream msg;
+            msg <<"Key:"<<i<<" not present in the series";
+            throw std::invalid_argument(msg.str());
+        }
+       return **p;
+       }      
+    }
+
+    template<class K, class V>
+    V Series<K,V>::operator[](const K& i) const{
+        
+       if(!sortedDescendent){
+           const_iterator p;
+           p = std::find(begin(),end(),i);
+           if(p == end()){            
+            std::ostringstream msg;
+            msg <<"Key:"<<i<<" not present in the series";
+            throw std::invalid_argument(msg.str());
+        }
+       return **p;
+       }
+
+       else if(*sortedDescendent){
+            const_iterator p;
+            const_iterator p1,p2;
+            std::tie(p1,p2) = std::equal_range(begin(),end(),i);    
+            if(p1->x() == i){
+                p = p1;
+            }
+            else if(p2->x() == i){
+                p=p2;
+            }
+            else{
+                p = end();
+            }
+            if(p == end()){            
+            std::ostringstream msg;
+            msg <<"Key:"<<i<<" not present in the series";
+            throw std::invalid_argument(msg.str());
+        }
+       return **p;
+       }
+       else{
+            const_reverse_iterator p;
+            const_reverse_iterator p1,p2;
+            std::tie(p1,p2) =  std::equal_range(rbegin(),rend(),i)  ;
+            if(p1->x() == i){
+                p = p1;
+            }
+            else if(p2->x() == i){
+                p=p2;
+            }
+            else{
+                p = rend();
+            }
+            if(p == rend()){            
+            std::ostringstream msg;
+            msg <<"Key:"<<i<<" not present in the series";
+            throw std::invalid_argument(msg.str());
+        }
+       return **p;
+       }      
+        
+        
     }
 
     template<class K, class V>
     std::vector<K> Series<K,V>::Keys() const{
         std::vector<K> keys;
-        std::transform(_data.begin(),_data.end(),std::back_inserter(keys),[](auto& a){return a.x;});
+        std::transform( begin(),
+                        end(),
+                        std::back_inserter(keys),
+                        [](auto& a){return a;});
         return keys;
     }
 
@@ -168,9 +256,13 @@ namespace AIX{namespace Data{
 
     template<class K, class V>
     Series<K,V> operator+(const Series<K,V>& a, const Series<K,V>& b){
-        std::vector<Axis<K,V>> intersection,symdiff;
-        std::set_intersection(a.begin(),a.end(),b.begin(),b.end(),std::back_inserter(intersection));
-
+        
+        std::vector<K> ak = a.Keys();
+        std::vector<K> bk = b.Keys();
+        std::sort(ak.begin(),ak.end());
+        std::sort(bk.begin(),bk.end());
+        std::vector<K> intersection;
+        std::set_intersection(ak.begin(),ak.end(),bk.begin(),bk.end(),std::back_inserter(intersection));
         std::vector<Axis<K,V>> sumr;    
         for(auto p:intersection){
             K k = (K)p;
