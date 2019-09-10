@@ -45,6 +45,8 @@ namespace AIX{namespace Data{
         Series<K,V>& operator=(const Axis<K,V>& axis);
         Series<K,V>& operator=(Series<K,V>&& that);
 
+        Series<K,V> operator-() const;
+
         void sort(bool descendentorder=true);
         V& operator[](const K& i);
         V operator[](const K& i) const;
@@ -67,6 +69,9 @@ namespace AIX{namespace Data{
         template<class A, class B>
         friend  Series<A,B> operator+(const Series<A,B>& a, const Series<A,B>& b);
 
+        template<class A, class B>
+        friend  Series<A,B> operator-(const Series<A,B>& a, const Series<A,B>& b);
+
         template<class A, class B> 
         friend class Series_Iterator;
 
@@ -76,7 +81,15 @@ namespace AIX{namespace Data{
 
     };
 
-   
+    template<class K, class V>
+    Series<K,V> Series<K,V>::operator-() const{
+        Series<K,V> m(*this);
+        for(auto& x:m._data){
+            *x *= -1;
+        }
+        return m;
+    }
+
     template<class K, class V>
     Series<K,V>::Series(const std::vector<K>& keys, const std::vector<V>& values){
         assert(keys.size() == values.size());            
@@ -273,6 +286,11 @@ namespace AIX{namespace Data{
         Series<K,V> r(sumr);
         return r;
         
+    }
+
+    template<class K, class V>
+    Series<K,V> operator-(const Series<K,V>& a, const Series<K,V>& b){
+        return a + (-b);
     }
 }
 }

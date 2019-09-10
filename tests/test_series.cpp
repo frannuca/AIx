@@ -55,8 +55,25 @@ int main() {
     std::cout<<"Summing series"<<std::endl;
     Series<int,double> series_1p2 = series_1+series_2;
     for(auto& k : series_1p2.Keys()){
-        double d = series_1p2[k] - series_1[k] - series_2[k];
-        std::cout<<d<<std::endl;        
+        double d = series_1p2[k] - series_1[k] - series_2[k];        
+        assert(std::abs(d)<1e-10);
+    }
+    
+    std::cout<<std::endl;
+    std::cout<<"Chekcing unitary minus"<<std::endl;
+    auto series_minus = -series_1;
+    for(auto& k : series_minus.Keys()){
+        
+        assert(std::abs(series_minus[k] + series_1[k])<1e-10);      
+    }
+    
+
+    std::cout<<std::endl;
+    std::cout<<"Subtracting series"<<std::endl;
+    auto series_1m2 = series_1 - series_2;
+    for(auto& k : series_1m2.Keys()){
+        double d = series_1m2[k] - series_1[k] + series_2[k];
+        assert(std::abs(d)<1e-10);      
     }
     
     std::cout<<"operator[] with assign"<<std::endl;
