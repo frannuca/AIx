@@ -14,6 +14,7 @@
 #include <set>
 #include "axis.hpp"
 #include <exception>
+#include <sstream>
 
 namespace AIX{namespace Data{
 

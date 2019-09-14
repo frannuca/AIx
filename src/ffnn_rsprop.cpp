@@ -31,7 +31,7 @@ namespace AIX{namespace MLP{
             _Ws_before = _Ws;
             _error[0] = std::numeric_limits<double>::infinity();
             _error[1] = std::numeric_limits<double>::infinity();
-            _bestError = 1e12;
+            _bestError = 1.0e12;
             _Ws_best.push_back(w);
         }
     }

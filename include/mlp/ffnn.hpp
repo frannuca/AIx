@@ -12,8 +12,8 @@ namespace AIX{
  
  struct FFNN: public INetwork{        
             mutable std::vector<arma::mat> _Ws_best;
-            mutable bool _bestError;
-            std::vector<std::unique_ptr<Layer>> _layers;
+            mutable double _bestError;
+            std::vector<std::unique_ptr< Layer > > _layers;
             std::unique_ptr<Layer> _outputLayer;
             std::function<double(const arma::vec&,const arma::vec&)> _floss;
             std::function<arma::vec(const arma::vec&,const arma::vec&)> _dfloss;
