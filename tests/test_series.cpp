@@ -5,137 +5,151 @@
 #include <variant>
 #include <vector>
 #include <utility>
-#include "data/heterogeneouscontainter.hpp"
-#include "data/series.hpp"
+#include "data/frame.hpp"
 #include <iterator>
 #include <random>
 
-int main() {
-    using namespace AIX;
-    using namespace AIX::Data;
+#include <iostream>
+#include <string>
+#include <variant>
+#include <vector>
 
-    std::cout<<"*************************************"<<std::endl;
-    std::cout<<"*        Series Tests                *"<<std::endl;
-    std::cout<<"*************************************"<<std::endl;
+struct MyVisitor
+{
+    template<class T>
+    void operator()(T& _in){_in += _in;}
+};
 
-
-    std::vector<int> axis(1000,0);
-    std::vector<double> values1(1000,0.0);
-    std::vector<Axis<int,double>> axispairs(500,Axis(0,0.0));
-    
-    std::random_device rd;
-    std::mt19937 g(rd());
-
-    std::generate(axis.begin(),axis.end(),[n=0]() mutable{return n++;});
-    std::shuffle(axis.begin(),axis.end(),g);
-
-    std::generate(values1.begin(),values1.end(),[](){return (double)std::rand()/(double)RAND_MAX;});
-
-    std::generate(axispairs.begin(),axispairs.end(),[n=0]() mutable {return Axis(n++, (double)std::rand()/(double)RAND_MAX);});
-    std::shuffle(axispairs.begin(),axispairs.end(),g);
-
-    std::cout<<"Checking ctor Series(keys, values)"<<std::endl;
-    Series<int,double> series_1(axis,values1);
-
-    std::cout<<"Checking ctor Series(axis)"<<std::endl;
-    Series<int,double> series_2(axispairs);
-    
-    std::cout<<"Sorting ascending (default) and checking order"<<std::endl;
-    series_1.sort();
-    auto series1keys = series_1.Keys();
-    for(size_t i=0;i<series1keys.size()-1;++i){ assert(series1keys[i]<series1keys[i+1]);};
-    
-    std::cout<<std::endl;
-    std::cout<<"Sorting descending (default) and checking order"<<std::endl;
-    series_2.sort(false);
-    auto series2keys = series_2.Keys();
-    for(size_t i=0;i<series2keys.size()-1;++i){ assert(series2keys[i]>series2keys[i+1]);};
-
-    std::cout<<std::endl;
-    std::cout<<"Summing series"<<std::endl;
-    Series<int,double> series_1s2 = series_1+series_2;
-    for(auto& k : series_1s2.Keys()){
-        double d = series_1s2[k] - series_1[k] - series_2[k];        
-        assert(std::abs(d)<1e-10);
+template<class... T>
+struct VariantContainer
+{
+    template<class V>
+    void visit(V&& visitor)
+    {
+        for (auto& object : objects)
+        {
+            std::visit(visitor, object);
+        }
     }
-    
-    std::cout<<std::endl;
-    std::cout<<"Chekcing unitary minus"<<std::endl;
-    auto series_minus = -series_1;
-    for(auto& k : series_minus.Keys()){
-        
-        assert(std::abs(series_minus[k] + series_1[k])<1e-10);      
-    }
-    
+    using value_type = std::variant<T...>;
+    std::vector<value_type> objects;
+};
 
-    std::cout<<std::endl;
-    std::cout<<"Subtracting series"<<std::endl;
-    auto series_1m2 = series_1 - series_2;
-    for(auto& k : series_1m2.Keys()){
-        double d = series_1m2[k] - series_1[k] + series_2[k];
-        assert(std::abs(d)<1e-10);      
-    }
-    
-    std::cout<<std::endl;
-    std::cout<<"product series"<<std::endl;
-    auto series_1p2 = series_1 * series_2;
-    for(auto& k : series_1p2.Keys()){
-        double d = series_1p2[k] - series_1[k] * series_2[k];
-        assert(std::abs(d)<1e-10);      
+struct heterogeneous_container{
+private:
+    template<class T>
+    static std::unordered_map<const heterogeneous_container*, std::vector<T>> items;
+public:
+    heterogeneous_container(){}
+    heterogeneous_container(const heterogeneous_container& that){
+        *this = that;
     }
 
+    heterogeneous_container& operator=(const heterogeneous_container& that){
+        clear();
+        copy_functions = that.copy_functions;
+        clear_functions = that.clear_functions;
 
-    std::cout<<std::endl;
-    std::cout<<"scalar product series"<<std::endl;
-    auto series_1scalar = series_1 * 3.0;
-    auto series_1scalarbis = 3.0 * series_1;
-    for(auto& k : series_1scalar.Keys()){
-        double d = series_1scalar[k] - series_1[k] * 3.0;
-        double d1 = series_1scalarbis[k] - series_1[k] * 3.0;
-        assert(std::abs(d)<1e-10);      
-        assert(std::abs(d1)<1e-10);      
+        for(auto& fcopy:that.copy_functions){
+            fcopy(that,*this);
+        }
+
+        return *this;
+    };
+
+    ~heterogeneous_container(){
+        clear();
     }
 
-    std::cout<<"operator[] with assign"<<std::endl;
-    series_1[257]=33.3;
-    assert(series_1[257]==33.3);
-    std::cout<<"OK";
+    std::vector<std::function<void(heterogeneous_container&)>> clear_functions;
+    std::vector<std::function<void(const heterogeneous_container&,heterogeneous_container&)> > copy_functions; 
+
+    void clear(){
+        for(auto& fdel : clear_functions) fdel(*this);
+    }
+    template<class T>
+    void push_back(const T& _t)
+    {
+        // don't have it yet, so create functions for destroying
+        if (items<T>.find(this) == std::end(items<T>))
+        { 
+            clear_functions.emplace_back(
+                [](heterogeneous_container& _c){items<T>.erase(&_c);});
+
+            copy_functions.emplace_back([](const heterogeneous_container& from, heterogeneous_container& to){
+                items<T>[&to]=items<T>[&from];
+            });
+        }
+        items<T>[this].push_back(_t);
+    }
+};
+
+// storage for our static members
+template<class T>
+std::unordered_map<const heterogeneous_container*, std::vector<T>> heterogeneous_container::items;
+
+
+template<class...>
+struct type_list{};
+
+template<class ... TYPES>
+struct visitor_base{
+    using types = type_list<TYPES ...>;
+};
+
+
+struct my_visitor : visitor_base<int, double>
+{
+    template<class T>
+    void operator()(T& _i) 
+    {
+        _i+=_i;
+    }    
+};
+
+template<class T, template<class...> class TLIST, class... TYPES>
+void visit_impl(T&& visitor, TLIST<TYPES...>)
+{
+   (..., visit_impl_help<std::decay_t<T>, TYPES>(visitor));
+};
+
+template<class T>
+void visit(T&& visitor)
+{
+    visit_impl(visitor, typename std::decay_t<T>::types{});
+};
+
+template<class T, class U>
+void visit_impl_help(T& visitor)
+{
+    for (auto&& element : items<U>[this])
+    {
+        visitor(element);
+    }
+};
+
+int main()
+{   
+    heterogeneous_container hcont;
+    hcont.push_back(std::string("hello"));
+    hcont.push_back(6.0);
+    hcont.push_back(true);
+    hcont.push_back(10);
+    auto lambdaPrintVisitor = [](auto&& _in){std::cout << _in << " ";};
+    VariantContainer<int, double, std::string> variantCollection;
+    variantCollection.objects.emplace_back(1);
+    variantCollection.objects.emplace_back(2.2);
+    variantCollection.objects.emplace_back("foo");
+    
+    // print them
+    variantCollection.visit(lambdaPrintVisitor);
+    std::cout << std::endl;
+    
+    // double them
+    variantCollection.visit(MyVisitor{});
+    
+    // print again
+    variantCollection.visit(lambdaPrintVisitor);
+    std::cout << std::endl;
+
 }
-
-
-/**
- * std::vector<var_t> vec = {10, 15l, 1.5, "hello"};
-    for(auto& v: vec) {
- 
-        // 1. void visitor, only called for side-effects (here, for I/O)
-        std::visit([](auto&& arg){std::cout << arg;}, v);
- 
-        // 2. value-returning visitor, demonstrates the idiom of returning another variant
-        var_t w = std::visit([](auto&& arg) -> var_t {return arg + arg;}, v);
- 
-        // 3. type-matching visitor: a lambda that handles each type differently
-        std::cout << ". After doubling, variant holds ";
-        std::visit([](auto&& arg) {
-            using T = std::decay_t<decltype(arg)>;
-            if constexpr (std::is_same_v<T, int>)
-                std::cout << "int with value " << arg << '\n';
-            else if constexpr (std::is_same_v<T, long>)
-                std::cout << "long with value " << arg << '\n';
-            else if constexpr (std::is_same_v<T, double>)
-                std::cout << "double with value " << arg << '\n';
-            else if constexpr (std::is_same_v<T, std::string>)
-                std::cout << "std::string with value " << std::quoted(arg) << '\n';
-            else 
-                static_assert(always_false<T>::value, "non-exhaustive visitor!");
-        }, w);
-    }
- 
-    for (auto& v: vec) {
-        // 4. another type-matching visitor: a class with 3 overloaded operator()'s
-        std::visit(overloaded {
-            [](auto arg) { std::cout << arg << ' '; },
-            [](double arg) { std::cout << std::fixed << arg << ' '; },
-            [](const std::string& arg) { std::cout << std::quoted(arg) << ' '; },
-        }, v);
-    }
- * */

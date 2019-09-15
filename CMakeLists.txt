@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
+
 set(INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include/)
 include_directories(${INCLUDE_PATH})
 
@@ -35,11 +36,7 @@ set(HEADERS
             
             ${INCLUDE_PATH}/nlp/nlpprocessor.hpp            
             ${INCLUDE_PATH}/rnn/lstm.hpp
-
-            ${INCLUDE_PATH}/data/heterogeneouscontainter.hpp
-            ${INCLUDE_PATH}/data/series.hpp
-            ${INCLUDE_PATH}/data/frame.hpp            
-            ${INCLUDE_PATH}/data/axis.hpp            
+            
             )
 
 enable_testing()
