@@ -107,26 +107,29 @@ struct my_visitor : visitor_base<int, double>
     }    
 };
 
-template<class T, template<class...> class TLIST, class... TYPES>
-void visit_impl(T&& visitor, TLIST<TYPES...>)
-{
-   (..., visit_impl_help<std::decay_t<T>, TYPES>(visitor));
-};
-
 template<class T>
 void visit(T&& visitor)
 {
     visit_impl(visitor, typename std::decay_t<T>::types{});
 };
 
-template<class T, class U>
-void visit_impl_help(T& visitor)
-{
-    for (auto&& element : items<U>[this])
-    {
-        visitor(element);
-    }
-};
+// template<class T, class U>
+// void visit_impl_help(T& visitor)
+// {
+//     for (auto&& element : items<U>[this])
+//     {
+//         visitor(element);
+//     }
+// };
+
+
+// template<class T, template<class...> class TLIST, class... TYPES>
+// void visit_impl(T&& visitor, TLIST<TYPES...>)
+// {
+//    (..., visit_impl_help<std::decay_t<T>, TYPES>(visitor));
+// };
+
+
 
 int main()
 {   
