@@ -24,7 +24,12 @@ namespace AIX{namespace MLP{
     FFNN::FFNN(){ 
 
     }
-    
+    void FFNN::init(){
+        _bestError=1e9;
+       for(auto&w :_Ws){            
+            _Ws_best.push_back(w);
+        }
+    }
     void FFNN::withInputLayer(size_t number_of_inputs){
         _number_inputs = number_of_inputs;
     }

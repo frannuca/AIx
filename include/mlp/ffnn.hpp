@@ -25,7 +25,7 @@ namespace AIX{
             mutable arma::vec _input;
             mutable arma::vec _input_1;
             mutable arma::vec _output;            
-            virtual void init(){};
+            virtual void init();
             void checkforbest(const double &totalerror) const;
                    
             FFNN();

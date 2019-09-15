@@ -1,3 +1,4 @@
+project("AIXt")
 cmake_minimum_required(VERSION 3.0.0)
 
 set(INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include/)

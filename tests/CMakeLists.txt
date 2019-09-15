@@ -33,10 +33,10 @@ set(CTEST_BINARY_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 set(TEST_FILES  #test_queue.cpp 
 				#test_convolute.cpp 
 				#test_opencv.cpp
-				#test_ffnn_newtonraphson.cpp
+				test_ffnn_newtonraphson.cpp
 				#test_ffnn_rsprop.cpp
 				#test_softmax.cpp
-				test_series.cpp
+				#test_series.cpp
 				) 
 
 foreach(file ${TEST_FILES})

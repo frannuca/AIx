@@ -24,6 +24,7 @@ bool checknan(const std::vector<double>& gf){
 namespace AIX{namespace MLP{
 
     void FFNN_RSPROP::init() {
+        _bestError = 1.0e12;
         for(auto&w :_Ws){
             std::vector<arma::mat> arr;                                   
             _dWs.push_back(std::vector<arma::mat>());               
@@ -31,7 +32,7 @@ namespace AIX{namespace MLP{
             _Ws_before = _Ws;
             _error[0] = std::numeric_limits<double>::infinity();
             _error[1] = std::numeric_limits<double>::infinity();
-            _bestError = 1.0e12;
+            
             _Ws_best.push_back(w);
         }
     }
