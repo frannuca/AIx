@@ -1,39 +1,38 @@
 #ifndef FRAME_H
 #define FRAME_H
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
 #include <map>
-#include <any>
-#include <utility>
-#include <functional>
+#include <set>
 
 namespace AIX{
     namespace Data{
-
-    template<typename K, typename C, class Comparator=std::less<>>
-    class Frame{
-        std::map<C,std::map<K,std::any>,Comparator> _columns;        
-        
-        public:
-
-        template<typename T>
-        void add_column(const std::string& columnname, const std::map<K,T>& x);
-
-        template<typename T>
-        std::map<K,T>& operator[](const C& column);
-
-    };
+    using namespace std;
+    using namespace boost::multi_index;
 
     
-    template<typename K, typename C,typename Comparator>
-    template<typename T>
-    void Frame<K,C,Comparator>::add_column(const std::string& columnname, const std::map<K,T>& x){
-        _columns[columnname]=x;
-    }  
+    template<typename K, typename C>
+    class Frame{
+        
+        
+        set<K> _index;
+        
+        public:
+        Frame(){};
+        
+        template<typename T>
+        void add_column(const C& id, const map<K,T>& x){
+            
+        }
 
-    template<typename K, typename C,typename Comparator>
-    template<typename T>
-    std::map<K,T>& Frame<K,C,Comparator>::operator[](const C& column){
-        return _columns[column];
-    }
+        template<typename T>
+        const T& get(const C& column,const K& key) const{
+            
+        }
+
+    };
 
 }}
 #endif

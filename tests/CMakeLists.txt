@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 
-set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_REQUIRED_FLAGS -std=c++17)
 
 include(CTest)
 enable_testing()
@@ -30,20 +30,20 @@ set(CTEST_BINARY_DIRECTORY ${PROJECT_BINARY_DIR}/tests)
 
 
 #file(GLOB files "test_*.cc")
-set(TEST_FILES  #test_queue.cpp 
-				#test_convolute.cpp 
-				#test_opencv.cpp
+set(TEST_FILES  test_queue.cpp 
+				test_convolute.cpp 
+				test_opencv.cpp
 				test_ffnn_newtonraphson.cpp
-				#test_ffnn_rsprop.cpp
-				#test_softmax.cpp
-				#test_series.cpp
+				test_ffnn_rsprop.cpp
+				test_softmax.cpp
+				test_series.cpp
 				) 
 
 foreach(file ${TEST_FILES})
 	string(REGEX REPLACE "(^.*/|\\.[^.]*$)" "" file_without_ext ${file})
 	add_executable(${file_without_ext} ${file} ${HEADERS})
 	target_link_libraries(${file_without_ext} AIx ${PROJECT_LIBS} ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT}  ${Boost_LIBRARIES} ${OpenCV_LIBS})	
-	
+	set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++17 ")
 	target_include_directories(${file_without_ext} PUBLIC ${INCLUDE_PATH})
 	add_test(${file_without_ext} ${file_without_ext})
 	set_tests_properties(${file_without_ext}

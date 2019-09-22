@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(AIx VERSION 0.1.0)
+project(AIx  VERSION 0.1.0)
 
-set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_REQUIRED_FLAGS -std=c++17)
+
+set(CMAKE_THREAD_LIBS_INIT "-lpthread")
+set(CMAKE_HAVE_THREADS_LIBRARY 1)
+set(CMAKE_USE_WIN32_THREADS_INIT 0)
+set(CMAKE_USE_PTHREADS_INIT 1)
 
 find_package(Armadillo  REQUIRED)
 find_package (Threads REQUIRED)
@@ -23,6 +28,7 @@ include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/include/)
 
 include_directories(${ARMADILLO_INCLUDE_DIRS})
+
 
 set(SOURCES	utils.cpp	 
 			convolution.cpp  
@@ -47,7 +53,7 @@ set(SOURCES	utils.cpp
 		target_link_libraries(AIx ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 message(INFO ${CMAKE_SOURCE_DIR})
 target_include_directories(AIx PUBLIC ${CMAKE_SOURCE_DIR}/include/)
-
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -std=c++17 ")
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

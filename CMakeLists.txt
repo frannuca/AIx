@@ -1,5 +1,18 @@
-project("AIXt")
 cmake_minimum_required(VERSION 3.0.0)
+project(Global)
+
+set (CMAKE_CXX_COMPILER_WORKS TRUE)
+set (CMAKE_C_COMPILER_WORKS TRUE)
+
+
+
+set(CMAKE_PROJECT_VERSION, 1)
+set(CMAKE_PROJECT_VERSION_MAJOR,0)
+set(CMAKE_PROJECT_VERSION_MINOR,0)
+set(CMAKE_PROJECT_VERSION_PATCH,0)
+
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_REQUIRED_FLAGS -std=c++17)
 
 set(INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include/)
 include_directories(${INCLUDE_PATH})
@@ -37,6 +50,9 @@ set(HEADERS
             
             ${INCLUDE_PATH}/nlp/nlpprocessor.hpp            
             ${INCLUDE_PATH}/rnn/lstm.hpp
+
+            ${INCLUDE_PATH}/data/series.hpp
+            ${INCLUDE_PATH}/data/frame.hpp
             
             )
 

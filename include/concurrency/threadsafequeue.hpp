@@ -10,6 +10,7 @@
 #include <chrono>
 #include <exception>
 #include <limits>
+#include <sys/types.h>
 #include "../custom_exceptions.hpp"
 namespace AIX{
     namespace Concurrency{

@@ -1,159 +1,93 @@
-#include <iomanip>
-#include <iostream>
-#include <string>
-#include <type_traits>
-#include <variant>
-#include <vector>
-#include <utility>
-#include "data/frame.hpp"
-#include <iterator>
-#include <random>
-
-#include <iostream>
-#include <string>
-#include <variant>
 #include <vector>
 #include <unordered_map>
-
-struct MyVisitor
-{
-    template<class T>
-    void operator()(T& _in){_in += _in;}
+#include <functional>
+#include <iostream>
+#include <experimental/type_traits>
+#include <any>
+#include <type_traits>
+#include "data/series.hpp"
+#include <iostream>
+struct foo {
+  int    memfun1(int a) const { return a;   }
+  double memfun2(double b) const { return b; }
 };
 
-template<class... T>
-struct VariantContainer
-{
-    template<class V>
-    void visit(V&& visitor)
-    {
-        for (auto& object : objects)
-        {
-            std::visit(visitor, object);
-        }
-    }
-    using value_type = std::variant<T...>;
-    std::vector<value_type> objects;
-};
-
-struct heterogeneous_container{
-private:
-    template<class T>
-    static std::unordered_map<const heterogeneous_container*, std::vector<T>> items;
-public:
-    heterogeneous_container(){}
-    heterogeneous_container(const heterogeneous_container& that){
-        *this = that;
-    }
-
-    heterogeneous_container& operator=(const heterogeneous_container& that){
-        clear();
-        copy_functions = that.copy_functions;
-        clear_functions = that.clear_functions;
-
-        for(auto& fcopy:that.copy_functions){
-            fcopy(that,*this);
-        }
-
-        return *this;
+struct AAAA{
+        int x;
+        
+        friend std::ostream& operator<<(std::ostream& os, const AAAA& x);
     };
-
-    ~heterogeneous_container(){
-        clear();
+    std::ostream& operator<<(std::ostream& os, const AAAA& o){
+        os<<"("<<o.x<<")";
+        return os;
     }
 
-    std::vector<std::function<void(heterogeneous_container&)>> clear_functions;
-    std::vector<std::function<void(const heterogeneous_container&,heterogeneous_container&)> > copy_functions; 
-
-    void clear(){
-        for(auto& fdel : clear_functions) fdel(*this);
-    }
-    template<class T>
-    void push_back(const T& _t)
-    {
-        // don't have it yet, so create functions for destroying
-        if (items<T>.find(this) == std::end(items<T>))
-        { 
-            clear_functions.emplace_back(
-                [](heterogeneous_container& _c){items<T>.erase(&_c);});
-
-            copy_functions.emplace_back([](const heterogeneous_container& from, heterogeneous_container& to){
-                items<T>[&to]=items<T>[&from];
-            });
-        }
-        items<T>[this].push_back(_t);
-    }
-};
-
-// storage for our static members
-template<class T>
-std::unordered_map<const heterogeneous_container*, std::vector<T>> heterogeneous_container::items;
-
-
-template<class...>
-struct type_list{};
-
-template<class ... TYPES>
-struct visitor_base{
-    using types = type_list<TYPES ...>;
-};
-
-
-struct my_visitor : visitor_base<int, double>
-{
-    template<class T>
-    void operator()(T& _i) 
-    {
-        _i+=_i;
-    }    
-};
-
-template<class T>
-void visit(T&& visitor)
-{
-    visit_impl(visitor, typename std::decay_t<T>::types{});
-};
-
-// template<class T, class U>
-// void visit_impl_help(T& visitor)
-// {
-//     for (auto&& element : items<U>[this])
-//     {
-//         visitor(element);
-//     }
-// };
-
-
-// template<class T, template<class...> class TLIST, class... TYPES>
-// void visit_impl(T&& visitor, TLIST<TYPES...>)
-// {
-//    (..., visit_impl_help<std::decay_t<T>, TYPES>(visitor));
-// };
-
-
+    bool operator<(const AAAA& a,const AAAA& b){return a.x<b.x;}
 
 int main()
-{   
-    heterogeneous_container hcont;
-    hcont.push_back(std::string("hello"));
-    hcont.push_back(6.0);
-    hcont.push_back(true);
-    hcont.push_back(10);
-    auto lambdaPrintVisitor = [](auto&& _in){std::cout << _in << " ";};
-    VariantContainer<int, double, std::string> variantCollection;
-    variantCollection.objects.emplace_back(1);
-    variantCollection.objects.emplace_back(2.2);
-    variantCollection.objects.emplace_back("foo");
+{
+    std::cout<<"missing for double "<<AIX::Missing::get_missing<double>(0)<<std::endl;
+    std::cout<<"missing for int "<<AIX::Missing::get_missing<int>(0)<<std::endl;
+    std::cout<<"missing for string "<<AIX::Missing::get_missing<std::string>(0)<<std::endl;
+    // std::any a = 1;
+    // int& x = std::any_cast<int&>(a);
+    // x=2;
+    // std::cout<<"the value x="<<x<<std::endl;
+    // std::cin>>x;
+    // std::cout<<"the value x="<<x<<std::endl;
+
+    // AIX::Data::Frame<int,std::string> frame;
+
+    AIX::Data::Series<std::string,double> series1, series2;
+    series1
+        .add_item("one",1.0)
+        .add_item("two",2.0)
+        .add_item("three",3.0)
+        .add_item("four",4.0)
+        .add_item("five",5.0)
+        .add_item("six",6.0)
+        .add_item("seven",7.0)
+        .add_item("eight",8.0)
+        .add_item("nine",9.0)
+        .add_item("ten",10.0);
+
+    series2
+        .add_item("one_",1.0)
+        .add_item("two_",2.0)
+        .add_item("three",3.0)
+        .add_item("four",4.0)
+        .add_item("five",5.0)
+        .add_item("six",6.0)
+        .add_item("seven",7.0)
+        .add_item("eight",8.0)
+        .add_item("nine_",9.0)
+        .add_item("ten_",10.0);
+    series1.sortbykey();
+    series2.sortbykey();
+    AIX::Data::Series<std::string,double> sumseries = series1+series2;
+    AIX::Data::Series<std::string,double>::const_iterator piter = series1.begin();
+    // std::cout<<*piter<<std::endl;
+
+    // std::cout<<"sorting data ascending"<<std::endl;
+    // series1.sortbykey();
+    for(auto& k:sumseries){
+        std::cout<<k<<" -> "<<sumseries[k]<<std::endl;
+    }
     
-    // print them
-    variantCollection.visit(lambdaPrintVisitor);
-    std::cout << std::endl;
+    AIX::Data::Series<AAAA,std::string> xseries;
+    xseries.add_item(AAAA{0},"1000.0").add_item(AAAA{1},"1001");
+
+    AIX::Data::Series<AAAA,std::string> yseries;
+    yseries.add_item(AAAA{1},"2001.0").add_item(AAAA{2},"2002");
+
+    auto stot = xseries+yseries;
+     for(auto& k:stot){
+        std::cout<<k<<" -> "<<stot[k]<<std::endl;
+    }
+    // std::cout<<"one="<<series1["one"]<<std::endl;
+    // const double& cd = series1["ten"];
+    // double & vd = series1["nine"];
+    // std::cout<<"nine="<<vd<<std::endl;
     
-    // double them
-    variantCollection.visit(MyVisitor{});
-    
-    // print again
-    variantCollection.visit(lambdaPrintVisitor);
-    std::cout << std::endl;
 
 }
