@@ -57,6 +57,35 @@ namespace AIX{
                 return n;
             }
            
+           static Series<K,T> applybinaryop(const Series<K,T>& a, const Series<K,T>& b,function<T(const T&,const T&)> ops){
+                set<K> keys = AIX::intersection(a.Keys(),b.Keys());
+                set<K> missing = AIX::symdifference(a.Keys(),b.Keys());
+
+                Series<K,T> sumseries;
+                for(auto& k:keys){
+                    sumseries.add_item(k,ops(a[k],b[k]));
+                }
+
+                for(auto& k:missing){
+                    sumseries.add_item(k,Missing::get_missing<T>(0));
+                }
+
+                return sumseries;
+           }
+
+           static Series<K,T> applybinaryop(const Series<K,T>& a, const T& l,function<T(const T&,const T&)> ops){
+                vector<K> keys =a.Keys();
+            
+
+                Series<K,T> sumseries;
+                for(auto& k:keys){
+                    sumseries.add_item(k,ops(a[k],l));
+                }
+
+                return sumseries;
+           }
+
+           
             public:
             
             class const_iterator{
@@ -160,21 +189,59 @@ namespace AIX{
             const_iterator end(){return const_iterator(&_index[0] + _index.size());}
 
 
-            Series<K,T> operator+(const Series<K,T>& that){
-                set<K> keys = AIX::intersection(this->Keys(),that.Keys());
-                set<K> missing = AIX::symdifference(Keys(),that.Keys());
-
-                Series<K,T> sumseries;
-                for(auto& k:keys){
-                    sumseries.add_item(k,(*this)[k]+that[k]);
-                }
-                for(auto& k:missing){
-                    sumseries.add_item(k,Missing::get_missing<T>(0));
-                }
-
-                return sumseries;
+            Series<K,T> operator+(const Series<K,T>& that) const{
+                return applybinaryop(*this,that,[](const T& a, const T& b){return a + b;});
             }
+
+            Series<K,T> operator-(const Series<K,T>& that) const{
+                return applybinaryop(*this,that,[](const T& a, const T& b){return a - b;});
+            }
+
+            Series<K,T> operator*(const Series<K,T>& that) const{
+                return applybinaryop(*this,that,[](const T& a, const T& b){return a * b;});
+            }
+
+            Series<K,T> operator*(const T& l) const{
+                return applybinaryop(*this,l,[](const T& a, const T& b){return a * b;});
+            }
+
+            Series<K,T> operator/(const Series<K,T>& that) const{
+                return applybinaryop(*this,that,[](const T& a, const T& b){return a / b;});
+            }
+
+            Series<K,T> operator/(const T& l) const{
+                return applybinaryop(*this,l,[](const T& a, const T& b){return a / b;});
+            }
+
+            Series<K,T> operator+(const T& l) const{
+                return applybinaryop(*this,l,[](const T& a, const T& b){return a + b;});
+            }
+
+            template<class Kx, class Tx>
+            friend Series<Kx,Tx> operator+(const Tx& l, const Series<Kx,Tx>& x);
+
+            template<class Kx, class Tx>
+            friend Series<Kx,Tx> operator*(const Tx& l, const Series<Kx,Tx>& x);
+
+            template<class Kx, class Tx>
+            friend Series<Kx,Tx> operator/(const Tx& l, const Series<Kx,Tx>& x);
+
         };
+
+        template<class K, class T>
+        Series<K,T> operator+(const T& l, const Series<K,T>& series){
+            return series + l;
+        }
+
+        template<class K, class T>
+        Series<K,T> operator*(const T& l, const Series<K,T>& series){
+            return series * l;
+        }
+
+        template<class K, class T>
+        Series<K,T> operator/(const T& l, const Series<K,T>& series){
+            return series * (1.0/l);
+        }
 
     }
 }

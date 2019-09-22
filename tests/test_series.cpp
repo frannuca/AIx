@@ -64,9 +64,10 @@ int main()
         .add_item("ten_",10.0);
     series1.sortbykey();
     series2.sortbykey();
-    AIX::Data::Series<std::string,double> sumseries = series1+series2;
+    AIX::Data::Series<std::string,double> sumseries = (series1+series2)/series1*10.0;
     AIX::Data::Series<std::string,double>::const_iterator piter = series1.begin();
     // std::cout<<*piter<<std::endl;
+    AIX::Data::Series<std::string,double> sumseries2 = 10.0/(sumseries/10.0);
 
     // std::cout<<"sorting data ascending"<<std::endl;
     // series1.sortbykey();
@@ -80,7 +81,7 @@ int main()
     AIX::Data::Series<AAAA,std::string> yseries;
     yseries.add_item(AAAA{1},"2001.0").add_item(AAAA{2},"2002");
 
-    auto stot = xseries+yseries;
+    auto stot = (xseries+yseries);
      for(auto& k:stot){
         std::cout<<k<<" -> "<<stot[k]<<std::endl;
     }

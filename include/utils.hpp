@@ -8,6 +8,7 @@
 #include <utility>
 
 namespace AIX{
+    using namespace std;
 
     arma::vec extendvector(const arma::vec& x, const double& v=1);
     
@@ -34,10 +35,12 @@ namespace AIX{
         static C get_missing(decltype(std::numeric_limits<C>::quiet_NaN())* p){return std::numeric_limits<C>::quiet_NaN();}
 
         template<typename C>
+        static C get_missing(typename enable_if<is_same<C, string>::value,C>::type* p){return std::string("NA");}
+
+        template<typename C>
         static C get_missing(...){C a; return a;}
         
     };
-
     
 }
 #endif
