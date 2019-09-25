@@ -13,6 +13,7 @@
 #include <sstream>
 #include <type_traits>
 #include "../utils.hpp"
+//#include "../concepts.hpp"
 
 namespace AIX{
     namespace Data{
@@ -20,18 +21,22 @@ namespace AIX{
 
 
         template<class K,class T>
-        class Series{
+    class Series  {
+            //BOOST_CONCEPT_ASSERT((AIX::Concepts::HasLessThanOp<K>));
             protected:
             mutable map<K,T>  _data;
             vector<K> _index;            
             bool isSorted=false;
-            
+            function<bool(const K&, const K&)> _fcomp=less<K>();
 
-            void order(){
-                sort(_index.begin(),_index.end(),std::less<K>());
-                isSorted=true;
-                }
-
+            void order() {
+                sort(_index.begin(), _index.end(), _fcomp);
+                isSorted = true;
+            }
+            void orderWith(decltype(_fcomp) fcomp){
+                _fcomp=fcomp;
+                order();
+            }
             void throwForExistingKey(const K& k){
               if(_data.find(k)!=_data.end()){
                   ostringstream msg;
@@ -39,11 +44,32 @@ namespace AIX{
                   throw invalid_argument(msg.str());
               }  
             }
+            int locate(const K& k){
+                    typename vector<K>::iterator nlow, nhigh;
+                    if(isSorted){
+                        typename vector<K>::iterator nlow, nhigh;
+                        tie(nlow,nhigh)=equal_range(_index.begin(),_index.end(),k,_fcomp);
+                        if(distance(nlow,nhigh)==1){
+                            return distance(_index.begin(),nlow); 
+                        }
+                        else{
+                            return -1;
+                        }
+                    }
+                    else{
+                        auto piter = std::find(_index.begin(),_index.end(),k);
+                        if(piter == _index.end())
+                            return -1;
+                        else
+                            return std::distance(_index.begin(),piter);
+                    }
+
+            }
             size_t updateIndex(const K& k){
                 int n=-1;
                 if(isSorted){
                     typename vector<K>::iterator nlow, nhigh;
-                    tie(nlow,nhigh)=equal_range(_index.begin(),_index.end(),k);
+                    tie(nlow,nhigh)=equal_range(_index.begin(),_index.end(),k,_fcomp);
                     if(nlow==nhigh){
                         return distance(_index.begin(),nlow); 
                     }
@@ -85,7 +111,18 @@ namespace AIX{
                 return sumseries;
            }
 
-           
+           static Series<K,T> applyunaryop(const Series<K,T>& a,function<T(const T&)> ops){
+                vector<K> keys =a.Keys();
+            
+
+                Series<K,T> sumseries;
+                for(auto& k:keys){
+                    sumseries.add_item(k,ops(a[k]));
+                }
+
+                return sumseries;
+           }
+
             public:
             
             class const_iterator{
@@ -123,7 +160,7 @@ namespace AIX{
             Series(Series<K,T>&& that): _index(move(that._index)),
                                         _data(std::move(that._data))
             {}
-
+            size_t size() const {return _index.size();}
             Series<K,T>& operator=(const Series<K,T>& that){
                 this->_data = that._data;
                 this->_index = that._index;
@@ -136,6 +173,16 @@ namespace AIX{
                 return *this;
             }
 
+            bool operator==(const Series<K,T>& that){
+                return std::equal(_index.begin(),_index.end(),that._index.begin(),that._index.end()) &&
+                       std::equal(_data.begin(),_data.end(),that._data.begin(),that._data.end());
+
+            }
+
+            bool operator !=(const Series<K,T>& that){
+                return !(*this == that);
+            }
+            
             const vector<K> Keys() const {return _index;}
           
             Series<K,T>& add_item(const K& k, const T& v){
@@ -170,10 +217,25 @@ namespace AIX{
                 return *this;
             }
             
+            bool remove_item(const K& k){
+                 int n = locate(k);
+                 if(n>=0) {
+                     _index.erase(_index.begin()+n);
+                     return true;
+                 }
+                 return false;
+            }
             
             const vector<K>& sortbykey(){
                 if(!isSorted)
                     order();
+
+                return _index;
+            }
+
+            const vector<K>& sortbykeyWith(function<bool(const K&,const K&)> fcomp){
+
+                orderWith(fcomp);
 
                 return _index;
             }
@@ -217,6 +279,14 @@ namespace AIX{
                 return applybinaryop(*this,l,[](const T& a, const T& b){return a + b;});
             }
 
+            Series<K,T> operator-() const{
+                return applyunaryop(*this,[](const T& a){return -a;});
+            }
+
+            Series<K,T> inv() const{
+                return applyunaryop(*this,[](const T& a){return 1.0/a;});
+            }
+
             template<class Kx, class Tx>
             friend Series<Kx,Tx> operator+(const Tx& l, const Series<Kx,Tx>& x);
 
@@ -240,7 +310,7 @@ namespace AIX{
 
         template<class K, class T>
         Series<K,T> operator/(const T& l, const Series<K,T>& series){
-            return series * (1.0/l);
+            return series.inv()*l;
         }
 
     }

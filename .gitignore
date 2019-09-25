@@ -33,5 +33,7 @@
 # directories
 /build/
 .vscode/
+.idea/
+cmake-build-debug/
 .vscode/launch.json
 .vscode/tasks.json

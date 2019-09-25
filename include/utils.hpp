@@ -37,9 +37,11 @@ namespace AIX{
         template<typename C>
         static C get_missing(typename enable_if<is_same<C, string>::value,C>::type* p){return std::string("NA");}
 
+        template<class C>
+        static C get_missing(typename enable_if<is_pointer<C>::value,C>::type* p){return nullptr;}
+
         template<typename C>
         static C get_missing(...){C a; return a;}
-        
     };
     
 }

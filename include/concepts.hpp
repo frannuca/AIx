@@ -7,7 +7,7 @@ namespace AIX{namespace Concepts{
 
 template<class T> struct HasLessThanOp;
 template <class T>
-struct HasLessThanOp {T a,b; BOOST_CONCEPT_USAGE(HasLessThanOp) { a < b; }};
+struct HasLessThanOp {T a,b; BOOST_CONCEPT_USAGE(HasLessThanOp) { a < b; }; };
 
 template<class T> struct HasLessOrEqualThanOp;
 template <class T>
