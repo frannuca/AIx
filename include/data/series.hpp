@@ -25,7 +25,7 @@ namespace AIX{
             //BOOST_CONCEPT_ASSERT((AIX::Concepts::HasLessThanOp<K>));
             protected:
             mutable map<K,T>  _data;
-            vector<K> _index;            
+            mutable vector<K> _index;            
             bool isSorted=false;
             function<bool(const K&, const K&)> _fcomp=less<K>();
 
@@ -167,6 +167,10 @@ namespace AIX{
                 return *this;
             }
 
+            void clear(){
+                _data.clear();
+                _index.clear();
+            }
             Series<K,T>& operator=(Series<K,T>&& that){
                 this->_data = move(that._data);
                 this->_index = move(that._index);
@@ -199,6 +203,10 @@ namespace AIX{
                 updateIndex(x.first);
                 return *this;
             }
+            bool hasKey(const K& k) const{
+                
+                    return _data.find(k)!=_data.end();
+            }
 
             Series<K,T>& add_items(const vector<pair<K,T> >& x){
                 for(const pair<K,T>& kv: x){
@@ -217,6 +225,16 @@ namespace AIX{
                 return *this;
             }
             
+            void join(const Series<K,T>& series,bool overridevalues){
+                for(const auto& k:series) 
+                {   bool haskey = hasKey(k);
+                    if(overridevalues && haskey){ _data[k]= series[k];}
+                    else if(!haskey){
+                        add_item(k,series[k]);
+                    }
+                }
+            }
+
             bool remove_item(const K& k){
                  int n = locate(k);
                  if(n>=0) {
@@ -227,9 +245,9 @@ namespace AIX{
             }
             
             const vector<K>& sortbykey(){
-                if(!isSorted)
+                if(!isSorted){
                     order();
-
+                }   
                 return _index;
             }
 
@@ -249,6 +267,9 @@ namespace AIX{
             }
             const_iterator begin(){return const_iterator(&_index[0]);}
             const_iterator end(){return const_iterator(&_index[0] + _index.size());}
+
+            const_iterator begin() const {return const_iterator(&_index[0]);}
+            const_iterator end() const {return const_iterator(&_index[0] + _index.size());}
 
 
             Series<K,T> operator+(const Series<K,T>& that) const{
@@ -296,7 +317,18 @@ namespace AIX{
             template<class Kx, class Tx>
             friend Series<Kx,Tx> operator/(const Tx& l, const Series<Kx,Tx>& x);
 
+            template<class Kx,class Tx>
+            friend std::ostream& operator<<(std::ostream& , const Series<Kx,Tx>& );
         };
+
+        template<class K,class T>
+        std::ostream& operator<<(ostream& out, const Series<K,T>& series){
+            for(const K& k: series.Keys())
+            {
+                out<<2<<","<<series[k]<<std::endl;
+            }
+            return out;
+        }
 
         template<class K, class T>
         Series<K,T> operator+(const T& l, const Series<K,T>& series){
