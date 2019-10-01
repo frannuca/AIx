@@ -176,6 +176,21 @@ namespace AIX{
                 this->_index = move(that._index);
                 return *this;
             }
+            
+            void fillMissing(const vector<K>& xaxis){
+                    for(const K& k: xaxis){
+                        if(hasKey(k)) continue;
+                        add_item(k,Missing::get_missing<T>(0));
+                    }
+            }
+
+            void alignwithindex(const vector<K>& xaxis){
+                    for(const K& k: _index){
+                        if(find(xaxis.begin(),xaxis.end(),k)==xaxis.end()){
+                            remove_item(k);
+                        }
+                    }
+            }
 
             bool operator==(const Series<K,T>& that){
                 return std::equal(_index.begin(),_index.end(),that._index.begin(),that._index.end()) &&
@@ -325,7 +340,7 @@ namespace AIX{
         std::ostream& operator<<(ostream& out, const Series<K,T>& series){
             for(const K& k: series.Keys())
             {
-                out<<2<<","<<series[k]<<std::endl;
+                out<<k<<","<<series[k]<<std::endl;
             }
             return out;
         }

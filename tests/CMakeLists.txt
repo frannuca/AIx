@@ -37,6 +37,7 @@ set(TEST_FILES  test_queue.cpp
 				test_ffnn_rsprop.cpp
 				test_softmax.cpp
 				series/test_series.cpp
+				frames/test_frame.cpp
 				) 
 
 foreach(file ${TEST_FILES})
