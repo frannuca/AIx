@@ -19,81 +19,105 @@ using namespace std;
 int main()
 {
     
-    std::cout<<"Starting Frame tests ...."<<std::endl;
-    std::cout<<"Testing ctors"<<std::endl;
-    
-    std::cout<<"Checking defaut ctor ..."<<std::endl;
-    AIX::Data::Frame<date,string,double,int,bool> frame;
-    
+    cout<<"Starting Frame tests ...."<<endl;
+
+    cout<<"Testing ctor"<<endl;
+
+    AIX::Data::Frame<date,string,double,int,bool,string> frame;
+    auto d1 = date(2019,01,01);
+    auto d2 = date(2019,01,02);
+    auto d3 = date(2019,01,03);
+    vector<date> dates = {d1,d2,d3};
+    //columns are Series, creating series to be added:
     AIX::Data::Series<date,double> series_d;
-    series_d.add_item(date(2019,01,01),1.0).add_item(date(2019,01,02),2.0).add_item(date(2019,01,03),3.0);
+    series_d
+    .add_item(dates[0],1.0)
+    .add_item(dates[1],2.0)
+    .add_item(dates[2],3.0);
     
     AIX::Data::Series<date,int> series_i;
-    series_i.add_item(date(2019,01,01),10);
+    series_i
+    .add_item(dates[1],10)
+    .add_item(dates[2],10);
     
     AIX::Data::Series<date,bool> series_b;
-    series_b.add_item(date(2019,01,01),true).add_item(date(2019,01,02),false);
+    series_b
+    .add_item(dates[0],true)
+    .add_item(dates[1],false);
+
+    AIX::Data::Series<date,string> series_str;
+    series_str
+    .add_item(dates[1],"1")
+    .add_item(dates[2],"2");
+
+    frame.add_column("double",series_d);
+    frame.add_column("bool",series_b);
+    frame.add_column("string",series_str);
+    frame.add_column("int",series_i);
+
+    cout<<"checking index completeness"<<endl;
+    set<date> keys = frame.keys();
+    assert(std::equal(dates.begin(),dates.end(),keys.begin(),keys.end()));
+
+    cout<<"Checking columns"<<endl;
+    vector<string> columns = {"double","bool","string","int"};
+    sort(columns.begin(),columns.end());
+
+    vector<string> framecolumns = frame.columns();
+    sort(framecolumns.begin(),framecolumns.end());
+    assert(equal(columns.begin(),columns.end(),framecolumns.begin(),framecolumns.end()));
+
+    cout<<"Checking delete column"<<endl;
+    auto series_x2 = series_d*2;
+    frame.add_column("2x",series_x2);
+    frame.delete_column("2x");
+    framecolumns = frame.columns();
+    sort(framecolumns.begin(),framecolumns.end());
+    assert(equal(columns.begin(),columns.end(),framecolumns.begin(),framecolumns.end()));
 
 
-    frame.add_column("DoubleCol",series_d);
-    frame.add_column("IntegerCol",series_i);
-    frame.add_column("BoolCol",series_b);
+    cout<<"checking retrieval of columns as series"<<endl;
+    auto& s1 = frame.getColumn<double>("double");
+    assert(s1 == series_d);
+    auto& s2 = frame.getColumn<bool>("bool");
+    assert(s2 == series_b);
+    auto& s3 = frame.getColumn<string>("string");
+    assert(s3 == series_str);
+    auto& s4 = frame.getColumn<int>("int");
+    assert(s4 == series_i);
 
-    frame.add_column("DoubleCol2",series_d);
-    frame.add_column("IntegerCol2",series_i);
-    frame.add_column("BoolCol2",series_b);
+    cout<<"Chekcing copy ctor and operator ="<<endl;
 
-    frame.add_column("ToBeDeleted",series_b);
-    for(auto c:frame.columns()) cout<<c<<endl;
-    cout<<"--------------------------------"<<endl;
-    frame.deletecolumn("ToBeDeleted");
-    for(auto c:frame.columns()) cout<<c<<endl;
+    AIX::Data::Frame<date,string,double,int,bool,string> frame2 = frame;
+    assert(frame2 == frame);
 
-    auto& s1 = frame.getColumn<double>("DoubleCol");
-    cout<<s1<<endl;
+    AIX::Data::Frame<date,string,double,int,bool,string> frame3(frame);
+    assert(frame3 == frame);
 
-    frame.add_column("DoubleSum",frame.getColumn<double>("DoubleCol")+frame.getColumn<double>("DoubleCol2"));
+    AIX::Data::Frame<date,string,double,int,bool,string> frame4(frame3);
 
-    vector<string> columns = frame.columns();
-    for(auto c:columns) cout<<c<<endl;
+    AIX::Data::Frame<date,string,double,int,bool,string> frame5 = move(frame3);
+    assert(frame4 == frame);
+    assert(frame3.columns().size()==0);
 
-
-    auto& s2 = frame.getColumn<double>("DoubleSum");
-    cout<<s2<<endl;
-
-    auto index = frame.keys();
-    cout<<"INDEX"<<endl;
-    for(auto idx:index){
-        cout<<idx<<endl;
-    }
-
-    frame.fill_missing();
+    cout<<"chekcing sparse removal"<<endl;
     frame.delete_sparse_rows();
+    set<date> spares_keysa = frame.keys();
+    vector<date> spares_keys(spares_keysa.begin(),spares_keysa.end());
 
-    frame.join(frame);
+    set<date> survialkeysb = {dates[1]};
+    vector<date> survialkeys(survialkeysb.begin(),survialkeysb.end());
 
-    assert(frame == frame);
+    assert(equal(spares_keys.begin(),spares_keys.end(),survialkeys.begin(),survialkeys.end()));
 
-    AIX::Data::Frame<date,string,double,int,bool> frame2;
-    frame2 = frame;
+    frame2.fill_missing();
+    set<date> allkeys = frame2.keys();
+    assert(std::equal(dates.begin(),dates.end(),allkeys.begin(),allkeys.end()));
 
-    AIX::Data::Frame<date,string,double,int,bool> frame3=frame;
-    AIX::Data::Frame<date,string,double,int,bool> frame4(frame);
-    AIX::Data::Frame<date,string,double,int,bool> frame5(move(frame4));
+    assert(frame4 == frame5);
+    frame4.getColumn<double>("double")[dates[0]] = 9999.9;
+    assert(frame4 != frame5);
 
-    auto index2 = frame2.keys();
-    cout<<"INDEX2"<<endl;
-    for(auto idx:index2){
-        cout<<idx<<endl;
-    }
-
-
-    AIX::Data::Series<date,double>& series_frame2 = frame2.getColumn<double>("DoubleSum");
-    series_frame2[date(2019,01,01)] = 98766789.0;
-    assert(frame != frame2);
-    assert(frame == frame3);
-    assert(frame == frame5);
-    assert(frame4.columns().size()==0);
     std::cout<<"OK"<<std::endl;
 
 }

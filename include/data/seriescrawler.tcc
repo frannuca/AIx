@@ -14,9 +14,9 @@ namespace AIX{namespace Data {
         }
 
         template<typename K, typename C, class ... Ts>
-        set<K> SeriesCrawler<K,C,Ts...>::keys() const{
+        set<K> SeriesCrawler<K,C,Ts...>::keys(bool only_intersection) const{
             set<K> keys;
-            (...,keys_imp<Ts>(keys));
+            (...,keys_imp<Ts>(keys, only_intersection));
             return keys;
         }
 
@@ -36,7 +36,7 @@ namespace AIX{namespace Data {
         template<typename K, typename C, class ... Ts>
         void SeriesCrawler<K,C,Ts...>::delete_sparse_rows()
         {
-            set<K> ks = keys();
+            set<K> ks = keys(true);
             (..., delete_sparse_rows_imp<Ts>(ks));
         }
 
@@ -62,7 +62,7 @@ namespace AIX{namespace Data {
         }
 
         template<typename K, typename C, class ... Ts>
-        void SeriesCrawler<K,C,Ts...>::deletecolumn(const C& colid){
+        void SeriesCrawler<K,C,Ts...>::delete_column(const C& colid){
             const function<void(const type*,const C&)>& f = _delete_column_function[colid];
             f(this,colid);
         }
@@ -114,10 +114,22 @@ namespace AIX{namespace Data {
 
         template<typename K, typename C, class ... Ts>
         template<class T>
-        void SeriesCrawler<K,C,Ts...>::keys_imp(set<K>& keys) const {
+        void SeriesCrawler<K,C,Ts...>::keys_imp(set<K>& keys, bool only_intersection) const {
             for(auto&kv: _items<T>[this]){
                 auto& ks = kv.second.Keys();
-                keys.insert(ks.begin(),ks.end());
+                if(keys.size()==0){
+                    keys.insert(ks.begin(),ks.end());
+                }
+                else if(only_intersection){
+                    set<K> aux;
+                    std::set_intersection(keys.begin(),keys.end(),ks.begin(),ks.end(),inserter(aux,aux.begin()));
+                    keys.clear();
+                    keys.insert(aux.begin(),aux.end());
+                }
+                else{
+                    keys.insert(ks.begin(),ks.end());
+                }
+
             }
         }
 

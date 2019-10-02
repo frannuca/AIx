@@ -79,7 +79,7 @@ namespace AIX{namespace Data{
          * collects the index keys across all stored series performing a union set operation.
          * @return set with all the keys present across all series in the container.
          */
-        set<K> keys() const;
+        set<K> keys(bool only_intersection=false) const;
 
         void fill_missing();
 /*!
@@ -95,7 +95,7 @@ namespace AIX{namespace Data{
         template<class T>
         void add_column(const C& columnid,  const Series<K,T>& p);
 
-        void deletecolumn(const C& colid);
+        void delete_column(const C& colid);
 
         template<class T>
         void add_column(const C& columnid,  Series<K,T>&& p);
@@ -112,7 +112,7 @@ namespace AIX{namespace Data{
         void delete_sparse_rows_imp(const set<K>& index);
 
         template<class T>
-        void keys_imp(set<K>& keys) const;
+        void keys_imp(set<K>& keys, bool only_intersection) const;
 
         template<class T>
         void columns_imp(vector<C>& colids) const;

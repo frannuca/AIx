@@ -28,8 +28,6 @@ struct SWithoutOrder{
 
 int main()
 {
-    std::cout<<"MISSING for Pointer="<<AIX::Missing::get_missing<int*>(0)<<std::endl;
-
     std::cout<<"Starting Series tests ...."<<std::endl;
     std::cout<<"Testing ctors"<<std::endl;
     
