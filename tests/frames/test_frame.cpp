@@ -33,42 +33,67 @@ int main()
     
     AIX::Data::Series<date,bool> series_b;
     series_b.add_item(date(2019,01,01),true).add_item(date(2019,01,02),false);
-   
-    frame.addColumn("DoubleCol",series_d);
-    frame.addColumn("IntegerCol",series_i);
-    frame.addColumn("BoolCol",series_b);
 
-    frame.addColumn("DoubleCol2",series_d);
-    frame.addColumn("IntegerCol2",series_i);
-    frame.addColumn("BoolCol2",series_b);
 
-    frame.addColumn("ToBeDeleted",series_b);
-    for(auto c:frame.getColsIndex()) cout<<c<<endl;
+    frame.add_column("DoubleCol",series_d);
+    frame.add_column("IntegerCol",series_i);
+    frame.add_column("BoolCol",series_b);
+
+    frame.add_column("DoubleCol2",series_d);
+    frame.add_column("IntegerCol2",series_i);
+    frame.add_column("BoolCol2",series_b);
+
+    frame.add_column("ToBeDeleted",series_b);
+    for(auto c:frame.columns()) cout<<c<<endl;
     cout<<"--------------------------------"<<endl;
     frame.deletecolumn("ToBeDeleted");
-    for(auto c:frame.getColsIndex()) cout<<c<<endl;
+    for(auto c:frame.columns()) cout<<c<<endl;
 
     auto& s1 = frame.getColumn<double>("DoubleCol");
     cout<<s1<<endl;
 
-    frame.addColumn("DoubleSum",frame.getColumn<double>("DoubleCol")+frame.getColumn<double>("DoubleCol2"));
+    frame.add_column("DoubleSum",frame.getColumn<double>("DoubleCol")+frame.getColumn<double>("DoubleCol2"));
 
-    vector<string> columns = frame.getColsIndex();
+    vector<string> columns = frame.columns();
     for(auto c:columns) cout<<c<<endl;
 
 
     auto& s2 = frame.getColumn<double>("DoubleSum");
     cout<<s2<<endl;
 
-    auto index = frame.getRowIndex();
+    auto index = frame.keys();
     cout<<"INDEX"<<endl;
     for(auto idx:index){
         cout<<idx<<endl;
     }
 
-    frame.fillMissingValues();
-    frame.removeSparseRows();
-    
+    frame.fill_missing();
+    frame.delete_sparse_rows();
+
+    frame.join(frame);
+
+    assert(frame == frame);
+
+    AIX::Data::Frame<date,string,double,int,bool> frame2;
+    frame2 = frame;
+
+    AIX::Data::Frame<date,string,double,int,bool> frame3=frame;
+    AIX::Data::Frame<date,string,double,int,bool> frame4(frame);
+    AIX::Data::Frame<date,string,double,int,bool> frame5(move(frame4));
+
+    auto index2 = frame2.keys();
+    cout<<"INDEX2"<<endl;
+    for(auto idx:index2){
+        cout<<idx<<endl;
+    }
+
+
+    AIX::Data::Series<date,double>& series_frame2 = frame2.getColumn<double>("DoubleSum");
+    series_frame2[date(2019,01,01)] = 98766789.0;
+    assert(frame != frame2);
+    assert(frame == frame3);
+    assert(frame == frame5);
+    assert(frame4.columns().size()==0);
     std::cout<<"OK"<<std::endl;
 
 }

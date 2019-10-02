@@ -53,6 +53,10 @@ set(HEADERS
 
             ${INCLUDE_PATH}/data/series.hpp
             ${INCLUDE_PATH}/data/frame.hpp
+            ${INCLUDE_PATH}/data/frame.tcc
+            ${INCLUDE_PATH}/data/seriescrawler.hpp
+            ${INCLUDE_PATH}/data/seriescrawler.tcc
+
             
             )
 

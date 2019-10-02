@@ -177,14 +177,14 @@ namespace AIX{
                 return *this;
             }
             
-            void fillMissing(const vector<K>& xaxis){
+            void fill_missing(const set<K>& xaxis){
                     for(const K& k: xaxis){
                         if(hasKey(k)) continue;
                         add_item(k,Missing::get_missing<T>(0));
                     }
             }
 
-            void alignwithindex(const vector<K>& xaxis){
+            void align_index(const set<K>& xaxis){
                     for(const K& k: _index){
                         if(find(xaxis.begin(),xaxis.end(),k)==xaxis.end()){
                             remove_item(k);
@@ -192,13 +192,13 @@ namespace AIX{
                     }
             }
 
-            bool operator==(const Series<K,T>& that){
+            bool operator==(const Series<K,T>& that) const {
                 return std::equal(_index.begin(),_index.end(),that._index.begin(),that._index.end()) &&
                        std::equal(_data.begin(),_data.end(),that._data.begin(),that._data.end());
 
             }
 
-            bool operator !=(const Series<K,T>& that){
+            bool operator !=(const Series<K,T>& that) const{
                 return !(*this == that);
             }
             

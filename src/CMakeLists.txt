@@ -48,7 +48,7 @@ set(SOURCES	utils.cpp
 			lstm.cpp	
 			softmax.cpp
 			loss.cpp
-			${HEADERS})
+			${HEADERS} ../include/data/seriescrawler.hpp)
 		add_library(AIx ${SOURCES})
 		target_link_libraries(AIx ${ARMADILLO_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${OpenCV_LIBS})
 message(INFO ${CMAKE_SOURCE_DIR})
