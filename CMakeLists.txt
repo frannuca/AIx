@@ -52,6 +52,8 @@ set(HEADERS
             ${INCLUDE_PATH}/rnn/lstm.hpp
 
             ${INCLUDE_PATH}/data/series.hpp
+            ${INCLUDE_PATH}/data/series.tcc
+            ${INCLUDE_PATH}/data/series_iterator.hpp
             ${INCLUDE_PATH}/data/frame.hpp
             ${INCLUDE_PATH}/data/frame.tcc
             ${INCLUDE_PATH}/data/seriescrawler.hpp

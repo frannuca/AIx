@@ -86,7 +86,7 @@ int main()
     auto& s4 = frame.getColumn<int>("int");
     assert(s4 == series_i);
 
-    cout<<"Chekcing copy ctor and operator ="<<endl;
+    cout<<"Checking copy ctor and operator ="<<endl;
 
     AIX::Data::Frame<date,string,double,int,bool,string> frame2 = frame;
     assert(frame2 == frame);
@@ -118,6 +118,19 @@ int main()
     frame4.getColumn<double>("double")[dates[0]] = 9999.9;
     assert(frame4 != frame5);
 
-    std::cout<<"OK"<<std::endl;
+    cout<<"accessing a row"<<endl;
+    auto rowSeries = frame4.row_generic(dates[1]);
+    for(auto& d:rowSeries){
+        cout<<d<<endl;
+    }
+
+    cout<<"accessing a row by type double"<<endl;
+    frame4.add_column("double2",series_d);
+    frame4.add_column("double3",series_d);
+    AIX::Data::Series<string,double*> rowSeries2 = frame4.row<double>(dates[1]);
+
+    cout<<rowSeries2<<endl;
+
+    std::cout<<"OK"<<endl;
 
 }
