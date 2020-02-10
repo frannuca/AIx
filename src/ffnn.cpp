@@ -21,35 +21,35 @@ bool checknan(const std::vector<double>& gf){
 namespace AIX{namespace MLP{
 
    
-    FFNN::FFNN(){ 
+    FeedForwardNN::FeedForwardNN(){
 
     }
-    void FFNN::init(){
+    void FeedForwardNN::init(){
         _bestError=1e9;
        for(auto&w :_Ws){            
             _Ws_best.push_back(w);
         }
     }
-    void FFNN::withInputLayer(size_t number_of_inputs){
+    void FeedForwardNN::withInputLayer(size_t number_of_inputs){
         _number_inputs = number_of_inputs;
     }
 
-    void FFNN::withHiddenLayer(std::unique_ptr<Layer>  x){
+    void FeedForwardNN::withHiddenLayer(std::unique_ptr<Layer>  x){
         _layers.push_back(std::move(x));
     }
 
-    void FFNN::withOutputLayer(std::unique_ptr<Layer>  x){
+    void FeedForwardNN::withOutputLayer(std::unique_ptr<Layer>  x){
         _outputLayer = std::move(x);
     }
     
 
-    void FFNN::withLossFunctions(std::function<double(const arma::vec&,const arma::vec&)> f,std::function<arma::vec(const arma::vec&,const arma::vec&)> df){
+    void FeedForwardNN::withLossFunctions(std::function<double(const arma::vec&, const arma::vec&)> f, std::function<arma::vec(const arma::vec&, const arma::vec&)> df){
         _floss = f;
         _dfloss = df;
       
     }
     
-    double FFNN::forward(const arma::vec& xin, const arma::vec& y) const {
+    double FeedForwardNN::forward(const arma::vec& xin, const arma::vec& y) const {
         
         arma::vec x=xin;
         _input=xin;
@@ -71,7 +71,7 @@ namespace AIX{namespace MLP{
         
     }
 
-    arma::vec FFNN::operator()(const arma::vec& x) const{       
+    arma::vec FeedForwardNN::operator()(const arma::vec& x) const{
         arma::vec s = x;
         for(size_t i=0;i <_layers.size();++i){
             s = (*_layers[i])(s,_Ws[i]);
@@ -79,10 +79,10 @@ namespace AIX{namespace MLP{
         return s;
     }
 
-    FFNN::~FFNN(){};
+    FeedForwardNN::~FeedForwardNN(){};
 
  
-    double FFNN::train(const TrainingSet& trainingset, size_t niter,double tol) const{
+    double FeedForwardNN::train(const TrainingSet& trainingset, size_t niter, double tol) const{
                 
 
         double totalerr=std::numeric_limits<double>::max();
@@ -112,7 +112,7 @@ namespace AIX{namespace MLP{
         return totalerr;
     }
 
-    void FFNN::checkforbest(const double& totalerror) const{
+    void FeedForwardNN::checkforbest(const double& totalerror) const{
         if(_bestError>=totalerror){
                 _bestError = totalerror;
                 _Ws_best.clear();

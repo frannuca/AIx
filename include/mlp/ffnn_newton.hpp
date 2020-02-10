@@ -9,7 +9,7 @@
 
 namespace AIX{
     namespace MLP{
-    class FFNN_NEWTON: public FFNN{
+    class FFNN_NEWTON: public FeedForwardNN{
         
         public:
         const double lr;

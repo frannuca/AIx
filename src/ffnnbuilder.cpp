@@ -7,12 +7,12 @@
 namespace AIX{namespace MLP{
     
     FFNNBuilder::FFNNBuilder(FFNN_TYPES typ,const FFNN_Params_Base* params){
-        FFNN* ptr=nullptr;
+        FeedForwardNN* ptr=nullptr;
         if(typ == FFNN_TYPES::NEWTON_RAPHSON)
         {        
             const FFNN_Newton_Raphson_Params* p1 = dynamic_cast<const FFNN_Newton_Raphson_Params*>(params);
             if(p1==nullptr){
-                throw "Invalid parameters passed to constuct the FFNN Newton Raphson training algorithm.";
+                throw "Invalid parameters passed to constuct the FeedForwardNN Newton Raphson training algorithm.";
             }
 
             ptr = new FFNN_NEWTON(p1->learning_rate);
@@ -20,7 +20,7 @@ namespace AIX{namespace MLP{
         else if(typ == FFNN_TYPES::RSPROP){
             const FFNN_RSPROP_Params* p2 = dynamic_cast<const FFNN_RSPROP_Params*>(params);
             if(p2==nullptr){
-                throw "Invalid parameters passed to constuct the FFNN RSProp training algorithm.";
+                throw "Invalid parameters passed to constuct the FeedForwardNN RSProp training algorithm.";
             }
 
             ptr = new FFNN_RSPROP(p2->learning_rate_increment,p2->learning_rate_decrement,p2->maximum_learning_rate,p2->minimum_learning_rate,p2->initial_learning_rate);    

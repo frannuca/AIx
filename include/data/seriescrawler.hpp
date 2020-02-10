@@ -6,7 +6,7 @@
 #define GLOBAL_SERIESCRAWLER_HPP
 #include <functional>
 #include <map>
-#include "data/series.hpp"
+#include "series.hpp"
 #include <set>
 namespace AIX{namespace Data{
     using namespace std;

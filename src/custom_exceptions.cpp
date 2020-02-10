@@ -3,7 +3,7 @@
 namespace AIX{
             TimeOutException::TimeOutException(const char* msg):msg_(msg){};
             TimeOutException::TimeOutException(const string& msg):msg_(msg){};
-            TimeOutException::~TimeOutException() throw(){};
+            TimeOutException::~TimeOutException() noexcept {};
             const char* TimeOutException::what() const noexcept {return msg_.c_str();};
 
 }

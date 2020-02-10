@@ -10,9 +10,9 @@ template<class K,class T>
 class Series;
 
 template<class K,class T>
-class const_iterator{
+class series_const_iterator{
 public:
-    typedef const_iterator self_type;
+    typedef series_const_iterator self_type;
     typedef K value_type;
     typedef K& reference;
     typedef K* pointer;
@@ -21,8 +21,8 @@ public:
 
     typedef const K& const_reference;
 
-    const_iterator(pointer ptr) : ptr_(ptr) { }
-    const_iterator& operator=(const const_iterator& that){
+    series_const_iterator(pointer ptr) : ptr_(ptr) { }
+    series_const_iterator& operator=(const series_const_iterator& that){
         this->ptr_ = that.ptr_;
         return *this;
     }

@@ -10,7 +10,7 @@ namespace AIX{
     namespace MLP{
         
  
- struct FFNN: public INetwork{        
+ struct FeedForwardNN: public INetwork{
             mutable std::vector<arma::mat> _Ws_best;
             mutable double _bestError;
             std::vector<std::unique_ptr< Layer > > _layers;
@@ -28,7 +28,7 @@ namespace AIX{
             virtual void init();
             void checkforbest(const double &totalerror) const;
                    
-            FFNN();
+            FeedForwardNN();
             void withInputLayer(size_t number_of_inputs);
             void withHiddenLayer(std::unique_ptr<Layer>);
             void withOutputLayer(std::unique_ptr<Layer>);
@@ -40,7 +40,7 @@ namespace AIX{
             arma::vec operator()(const arma::vec& x) const override;
             virtual double train(const TrainingSet& trainingset, size_t niter,double tol) const override; 
             
-            virtual ~FFNN();
+            virtual ~FeedForwardNN();
             
     };
 

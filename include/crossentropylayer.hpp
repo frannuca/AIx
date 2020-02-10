@@ -5,7 +5,7 @@
 namespace AIX{
 class CrossEntropyLayer{
     protected:        
-        arma::vec forward(const arma::vec& xinput,const arma::vec& xoutput);
+        static arma::vec forward(const arma::vec& ycomputed, const arma::vec& yexpected);
         arma::vec grad_forward(const arma::vec& xinput,const arma::vec& xoutput);
         void backward();
     public:

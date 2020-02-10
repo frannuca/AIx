@@ -64,7 +64,7 @@ namespace AIX{namespace Data {
         }
 
         template<class K,class T>
-        Series<K,T> Series<K,T>::applybinaryop(const Series<K,T>& a, const Series<K,T>& b,function<T(const T&,const T&)> ops){
+        Series<K,T> Series<K,T>::applyBinaryOp(const Series<K,T>& a, const Series<K,T>& b, function<T(const T&, const T&)> ops){
             set<K> keys = AIX::intersection(a.Keys(),b.Keys());
             set<K> missing = AIX::symdifference(a.Keys(),b.Keys());
 
@@ -81,7 +81,7 @@ namespace AIX{namespace Data {
         }
 
         template<class K,class T>
-        Series<K,T> Series<K,T>::applybinaryop(const Series<K,T>& a, const T& l,function<T(const T&,const T&)> ops){
+        Series<K,T> Series<K,T>::applyBinaryOp(const Series<K,T>& a, const T& l, function<T(const T&, const T&)> ops){
             vector<K> keys =a.Keys();
 
 
@@ -94,12 +94,10 @@ namespace AIX{namespace Data {
         }
 
         template<class K,class T>
-        Series<K,T> Series<K,T>::applyunaryop(const Series<K,T>& a,function<T(const T&)> ops){
-            vector<K> keys =a.Keys();
-
+        Series<K,T> Series<K,T>::applyUnaryOp(const Series<K,T>& a, function<T(const T&)> ops){
 
             Series<K,T> sumseries;
-            for(auto& k:keys){
+            for(auto& k:a){
                 sumseries.add_item(k,ops(a[k]));
             }
 

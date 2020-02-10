@@ -18,7 +18,7 @@ namespace AIX{
 
    class FFNNBuilder{
        private:
-       std::unique_ptr<FFNN> _instance;
+       std::unique_ptr<FeedForwardNN> _instance;
        public:
         FFNNBuilder()=delete;
         FFNNBuilder(FFNN_TYPES,const FFNN_Params_Base* params);

@@ -19,7 +19,7 @@ namespace AIX{
             public:
             explicit TimeOutException(const char* msg);
             explicit TimeOutException(const string& msg);
-            virtual ~TimeOutException() throw();
+            virtual ~TimeOutException() noexcept;
             virtual const char* what() const noexcept;
 
             protected:

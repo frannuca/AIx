@@ -11,7 +11,7 @@
 
 namespace AIX{
     namespace MLP{
-    class FFNN_RSPROP: public FFNN{
+    class FFNN_RSPROP: public FeedForwardNN{
         private:
         mutable std::vector<std::vector<arma::mat>> _dWs;        
         mutable std::vector<arma::mat> _Ws_before;

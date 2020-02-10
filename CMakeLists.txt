@@ -4,7 +4,9 @@ project(Global)
 set (CMAKE_CXX_COMPILER_WORKS TRUE)
 set (CMAKE_C_COMPILER_WORKS TRUE)
 
-
+# set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+# set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(CMAKE_PROJECT_VERSION, 1)
 set(CMAKE_PROJECT_VERSION_MAJOR,0)
@@ -14,6 +16,7 @@ set(CMAKE_PROJECT_VERSION_PATCH,0)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_REQUIRED_FLAGS -std=c++17)
 
+set(CMAKE_BUILD_TYPE Debug)
 set(INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include/)
 include_directories(${INCLUDE_PATH})
 
@@ -56,10 +59,10 @@ set(HEADERS
             ${INCLUDE_PATH}/data/series_iterator.hpp
             ${INCLUDE_PATH}/data/frame.hpp
             ${INCLUDE_PATH}/data/frame.tcc
+            ${INCLUDE_PATH}/data/csvreader.h
             ${INCLUDE_PATH}/data/seriescrawler.hpp
             ${INCLUDE_PATH}/data/seriescrawler.tcc
-
-            
+            ${INCLUDE_PATH}/dal/idal.hpp            
             )
 
 enable_testing()
